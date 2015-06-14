@@ -22,7 +22,7 @@ import plants.Plant2;
 import plants.Plant3;
 import plants.StickyTree;
 
-public class Main {
+public class PreviewMain {
 
 	private static List<DrawingTreeEntry> trees;
 	private static List<Fish> fishes;
@@ -57,10 +57,10 @@ public class Main {
 		Fish fish = new Fish(c1, c2, s, da, db, ra, rb, ba, bb, x, y);
 		
 		
-		int sign  = Main.randomRange(0,1) == 0 ? 1 : -1;
-		fish.horizontalBend(sign*Main.randomRange(fish.getWidth()/4, fish.getWidth()/2));
-		sign  = Main.randomRange(0,1) == 0 ? 1 : -1;
-		fish.verticalBend(sign*Main.randomRange(fish.getHeight()/4, fish.getHeight()/2));
+		int sign  = PreviewMain.randomRange(0,1) == 0 ? 1 : -1;
+		fish.horizontalBend(sign*PreviewMain.randomRange(fish.getWidth()/4, fish.getWidth()/2));
+		sign  = PreviewMain.randomRange(0,1) == 0 ? 1 : -1;
+		fish.verticalBend(sign*PreviewMain.randomRange(fish.getHeight()/4, fish.getHeight()/2));
 		
 		
 		fish.iterate(100);

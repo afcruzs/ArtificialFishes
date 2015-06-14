@@ -190,7 +190,7 @@ public class ActivatorInhibitorSystem {
 		return (pixel>>24) == 0x00;
 	}
 		
-	public void draw(Graphics2D g, int width, int height, BufferedImage image, int[] colours){
+	public void draw(Graphics2D g, BufferedImage image, int[] colours){
 		
 		g.setRenderingHint(
 			    RenderingHints.KEY_ANTIALIASING,
@@ -237,7 +237,7 @@ public class ActivatorInhibitorSystem {
 			@Override
 			public void paintComponent(Graphics g){
 				super.paintComponents(g);
-				system.draw((Graphics2D) g, getWidth(), getHeight(), image, colours);
+				system.draw((Graphics2D) g,  image, colours);
 			}
 		};
 		final JFrame frame = new JFrame();

@@ -10,7 +10,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 import affineTransforms.NonLinearTransform;
-import aquarium.Main;
+import aquarium.PreviewMain;
 import DRSystem.ActivatorInhibitorSystem;
 
 public class Fish {
@@ -94,9 +94,9 @@ public class Fish {
 		this.iterations += times;
 	}
 	
-	public void draw(Graphics2D g, int width, int height){
+	public void draw(Graphics2D g){
 	//	system.step();
-		system.draw(g, width, height, image, colours);
+		system.draw(g,image, colours);
 	}
 
 	

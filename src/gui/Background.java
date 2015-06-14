@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 
 import plants.DrawingTreeEntry;
 import DRSystem.ActivatorInhibitorSystem;
-import aquarium.Main;
+import aquarium.PreviewMain;
 import fishes.Fish;
 
 
@@ -38,12 +38,12 @@ public class Background extends JPanel {
 			    RenderingHints.KEY_ANTIALIASING,
 			    RenderingHints.VALUE_ANTIALIAS_ON);
 		
-		for(DrawingTreeEntry entry : Main.iterateTreeList())
+		for(DrawingTreeEntry entry : PreviewMain.iterateTreeList())
 			entry.draw(g2,getWidth(),getHeight());
 		
 		
-		for(Fish fish : Main.iterateFishes())
-			fish.draw((Graphics2D) g, getWidth(), getHeight());
+		for(Fish fish : PreviewMain.iterateFishes())
+			fish.draw((Graphics2D) g);
 		
 		
 	}
