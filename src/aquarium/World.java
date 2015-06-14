@@ -1,5 +1,6 @@
 package aquarium;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 
 import plants.DrawingTreeEntry;
 import fishes.Fish;
+import fishes.RandomFishGenerator;
 
 public class World {
 	List<Fish> fishes;
@@ -15,15 +17,25 @@ public class World {
 	public World(){
 		fishes = new ArrayList<>();
 		plants = new ArrayList<>();
+		
+		//randomFishPopulation(2);
+		
 	}
 	
+	public void randomFishPopulation(int n){
+		while(n-- > 0){
+			fishes.add( RandomFishGenerator.randomFish() );		
+		}
+		
+	}
 	
 	/*
 	 * Draws fishes Ohh not surprising...
 	 */
 	public void drawFishes(Graphics2D g){
-		for(Fish fish : fishes)
+		for(Fish fish : fishes){
 			fish.draw(g);
+		}
 	}
 	
 	/*
@@ -47,6 +59,10 @@ public class World {
 		drawBackground(g);
 		drawFishes(g);
 		drawPlants(g);
+	}
+
+	public void start() {
+		randomFishPopulation(3);
 	}
 	
 	

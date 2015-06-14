@@ -15,11 +15,30 @@ import DRSystem.ActivatorInhibitorSystem;
 
 public class Fish {
 	
-	private ActivatorInhibitorSystem system;
-	BufferedImage image;
-	int colours[];
-	int iterations = 0;
-	public Fish(Color c1, Color c2, double s, double da, double db, double ra, double rb, double ba, double bb, int x, int y){
+	protected ActivatorInhibitorSystem system;
+	protected BufferedImage image;
+	protected int colours[];
+	protected FishGenotype genotype;
+	protected int width, height;
+	
+	public Fish(BufferedImage fishTemplate, FishGenotype fishGenotype, int x, int y, int width, int height){
+		this.image = fishTemplate;
+		this.genotype = fishGenotype;
+		this.width = width;
+		this.height = height;
+		colours  = new int[256];
+		colours[0] = genotype.skinGenotype.color1.getRGB();
+		colours[1] = genotype.skinGenotype.color2.getRGB();
+		
+		for(int i=2; i<colours.length; i++)
+			colours[i] = new Color(colours[i-1]|colours[i-2]).getRGB();
+		
+		SkinGenotype sk = genotype.skinGenotype;
+		system = new ActivatorInhibitorSystem(sk.s,sk.Da,sk.Db,sk.ra,sk.rb,sk.ba,sk.bb, 
+				image.getWidth(),image.getHeight(),x,y,sk.iterations);
+	}
+	
+	public Fish(Color c1, Color c2, double s, double da, double db, double ra, double rb, double ba, double bb, int x, int y, int iterations){
 		colours = new int[256];
 		colours[0] = c1.getRGB();
 		colours[1] = c2.getRGB();
@@ -35,7 +54,7 @@ public class Fish {
 		} 
 		
 		int rows = image.getWidth(), cols = image.getHeight();
-		system = new ActivatorInhibitorSystem(s,da,db,ra,rb,ba,bb, rows,cols,x,y);
+		system = new ActivatorInhibitorSystem(s,da,db,ra,rb,ba,bb, rows,cols,x,y,iterations);
 		
 	}
 	
@@ -47,7 +66,6 @@ public class Fish {
 	private void updateSystem(){
 		int rows = image.getWidth(), cols = image.getHeight();
 		system = system.lightCopy(rows,cols);
-		for(int i=0; i<iterations; i++) system.step();
 	}
 	
 	public void verticalBend(int offset){
@@ -87,16 +105,9 @@ public class Fish {
 		return system.getY();
 	}
 	
-	public void iterate(int times){
-		for(int i=0; i<times; i++)
-			system.step();
-		
-		this.iterations += times;
-	}
-	
 	public void draw(Graphics2D g){
 	//	system.step();
-		system.draw(g,image, colours);
+		system.draw(g,image, colours,width,height);
 	}
 
 	

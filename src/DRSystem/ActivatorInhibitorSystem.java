@@ -26,8 +26,9 @@ public class ActivatorInhibitorSystem {
 	private int rows, cols;
 	private double k;
 	int x,y;
+	private int iterations;
 	public ActivatorInhibitorSystem(double s, double da, double db, double ra,
-			double rb, double ba, double bb, int rows, int cols,int x, int y) {
+			double rb, double ba, double bb, int rows, int cols,int x, int y, int iterations) {
 		super();
 		this.s = s;
 		Da = da;
@@ -43,15 +44,20 @@ public class ActivatorInhibitorSystem {
 		this.k = 0.01;
 		this.x = x;
 		this.y = y;
+		this.iterations = iterations;
 		randomInit();
+		iterateSystem();
 	}
 	
 	public ActivatorInhibitorSystem lightCopy(int rows, int cols){
-		return new ActivatorInhibitorSystem(s, Da, Db, ra, rb, ba, bb, rows, cols, x, y);
+		return new ActivatorInhibitorSystem(s, Da, Db, ra, rb, ba, bb, rows, cols, x, y, iterations);
 		
 	}
 	
-	
+	public void iterateSystem(){
+		for(int i=0; i<iterations; i++)
+			step();
+	}
 	
 	public int getRows() {
 		return rows;
@@ -190,7 +196,7 @@ public class ActivatorInhibitorSystem {
 		return (pixel>>24) == 0x00;
 	}
 		
-	public void draw(Graphics2D g, BufferedImage image, int[] colours){
+	public void draw(Graphics2D g, BufferedImage image, int[] colours, int width, int height){
 		
 		g.setRenderingHint(
 			    RenderingHints.KEY_ANTIALIASING,
@@ -206,64 +212,66 @@ public class ActivatorInhibitorSystem {
 					image.setRGB( i, j, colours[ scale(255,minRange,maxRange,A[i][j]) ] );
 			}
 		}
- 		g.drawImage(image, x, y, null);
+		
+ 		//g.drawImage(image, x, y, null);
+ 		g.drawImage(image, x, y, x+width, y+height, 0, 0, image.getWidth(), image.getHeight(), null);
 	}
 
-	public static void main(String[] args) throws IOException {
-		double s = 11.5;
-		double da = 18.5;
-		double db = 12.5;
-		double ra = 1.6;
-		double rb = 1.6;
-		double ba = 21.7;
-		double bb = 8.8;
-		
-
-		final int[] colours = new int[256];
-		colours[0] = Color.GREEN.getRGB();
-		colours[1] = Color.YELLOW.getRGB();
-		for(int i=2; i<colours.length; i++){
-			colours[i] = new Color(colours[i-1]|colours[i-2]).darker().getRGB();
-		}
-		final BufferedImage image = /*new BufferedImage(rows, cols, BufferedImage.TYPE_INT_RGB);*/
-				ImageIO.read(new File("fish0.png")); 
-		int rows = image.getWidth(), cols = image.getHeight();
-		final ActivatorInhibitorSystem system = new ActivatorInhibitorSystem(s, da, db, ra, rb, ba, bb, rows,cols,0,0);
-		
-
-		
-	//	for(int i=0; i<100; i++) system.step();
-		JPanel panel  = new JPanel(){
-			@Override
-			public void paintComponent(Graphics g){
-				super.paintComponents(g);
-				system.draw((Graphics2D) g,  image, colours);
-			}
-		};
-		final JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setVisible(true);
-		frame.add(panel);
-		frame.setSize(rows, cols);
-		
-		
-		//for(int i=0; i<rows; i++) System.out.println(Arrays.toString(system.A[i]));
-		new Thread(){
-			@Override
-			public void run(){
-				int it = 0;
-				while(true){
-					system.step();
-					frame.repaint();
-					frame.setTitle( String.valueOf(it++) + " " + String.valueOf(system.A[0][0]) );
-				}
-				
-			}
-		}.start();
-		
-		//double xd[][] = system.scaleData(system.A);
-		//for(int i=0; i<rows; i++) System.out.println(Arrays.toString(xd[i]));
-	}
+//	public static void main(String[] args) throws IOException {
+//		double s = 11.5;
+//		double da = 18.5;
+//		double db = 12.5;
+//		double ra = 1.6;
+//		double rb = 1.6;
+//		double ba = 21.7;
+//		double bb = 8.8;
+//		
+//
+//		final int[] colours = new int[256];
+//		colours[0] = Color.GREEN.getRGB();
+//		colours[1] = Color.YELLOW.getRGB();
+//		for(int i=2; i<colours.length; i++){
+//			colours[i] = new Color(colours[i-1]|colours[i-2]).darker().getRGB();
+//		}
+//		final BufferedImage image = /*new BufferedImage(rows, cols, BufferedImage.TYPE_INT_RGB);*/
+//				ImageIO.read(new File("fish0.png")); 
+//		int rows = image.getWidth(), cols = image.getHeight();
+//		final ActivatorInhibitorSystem system = new ActivatorInhibitorSystem(s, da, db, ra, rb, ba, bb, rows,cols,0,0,1);
+//		
+//
+//		
+//	//	for(int i=0; i<100; i++) system.step();
+//		JPanel panel  = new JPanel(){
+//			@Override
+//			public void paintComponent(Graphics g){
+//				super.paintComponents(g);
+//				system.draw((Graphics2D) g,  image, colours);
+//			}
+//		};
+//		final JFrame frame = new JFrame();
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		frame.setVisible(true);
+//		frame.add(panel);
+//		frame.setSize(rows, cols);
+//		
+//		
+//		//for(int i=0; i<rows; i++) System.out.println(Arrays.toString(system.A[i]));
+//		new Thread(){
+//			@Override
+//			public void run(){
+//				int it = 0;
+//				while(true){
+//					system.step();
+//					frame.repaint();
+//					frame.setTitle( String.valueOf(it++) + " " + String.valueOf(system.A[0][0]) );
+//				}
+//				
+//			}
+//		}.start();
+//		
+//		//double xd[][] = system.scaleData(system.A);
+//		//for(int i=0; i<rows; i++) System.out.println(Arrays.toString(xd[i]));
+//	}
 	
 	
 	
