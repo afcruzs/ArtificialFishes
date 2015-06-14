@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 
 import aquarium.Controller;
 import fishes.FeedingGenotype.Type;
+import fishes.MorphologyGenotype.BendAction.BendType;
 
 public class RandomFishGenerator {
 	
@@ -91,6 +92,10 @@ public class RandomFishGenerator {
 		return start + (random * (end - start));
 	}
 	
+	static BendType randomBendType(){
+		return new Random().nextBoolean() ? BendType.HORIZONTAL : BendType.VERTICAL;
+	}
+	
 	public static Fish randomFish() {
 		Random rand = new Random();
 		
@@ -101,8 +106,10 @@ public class RandomFishGenerator {
 		FeedingGenotype feedingGenotype = new FeedingGenotype(randomType());
 		
 		MorphologyGenotype morphologyGenotype = new MorphologyGenotype();
+		morphologyGenotype.addBendAction( randomBendType() , ( rand.nextBoolean() ? -1 : 1 )*rand.nextInt(50) );
 		
-		MovementGenotype movementType = new MovementGenotype();
+		MovementGenotype movementType = new MovementGenotype( rand.nextDouble(), rand.nextDouble(),
+															  rand.nextDouble(), rand.nextDouble() );
 		
 		int reproductionAge = rand.nextInt(10);
 		int maximumLevelOfEnergy = rand.nextInt(30);

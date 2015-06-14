@@ -8,13 +8,17 @@ import java.util.List;
  * that moves the fish in a 2D space.
  */
 public class MovementGenotype {
-	List<Double> probabilities;
-	
-	public MovementGenotype(){
-		probabilities = new ArrayList<>();
+	double moveToFishProbability, moveToPlantProbability, stayProbability, moveToNothingProbability;
+
+	public MovementGenotype(double moveToFishProbability,
+			double moveToPlantProbability, double stayProbability,
+			double moveToNothingProbability) {
+		super();
+		this.moveToFishProbability = moveToFishProbability;
+		this.moveToPlantProbability = moveToPlantProbability;
+		this.stayProbability = stayProbability;
+		this.moveToNothingProbability = moveToNothingProbability;
 	}
 	
-	public void addProbability(double prob){
-		probabilities.add(prob);
-	}
+	
 }

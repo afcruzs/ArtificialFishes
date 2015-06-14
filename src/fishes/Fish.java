@@ -9,6 +9,8 @@ import java.util.Random;
 
 import javax.imageio.ImageIO;
 
+import fishes.MorphologyGenotype.BendAction;
+import fishes.MorphologyGenotype.BendAction.BendType;
 import affineTransforms.NonLinearTransform;
 import aquarium.PreviewMain;
 import DRSystem.ActivatorInhibitorSystem;
@@ -36,6 +38,13 @@ public class Fish {
 		SkinGenotype sk = genotype.skinGenotype;
 		system = new ActivatorInhibitorSystem(sk.s,sk.Da,sk.Db,sk.ra,sk.rb,sk.ba,sk.bb, 
 				image.getWidth(),image.getHeight(),x,y,sk.iterations);
+		
+		for( BendAction ba : genotype.morphologyGenotype.bends ){
+			if( ba.type.equals(BendType.VERTICAL) )
+				verticalBend(ba.offset);
+			else
+				horizontalBend(ba.offset);
+		}
 	}
 	
 	public Fish(Color c1, Color c2, double s, double da, double db, double ra, double rb, double ba, double bb, int x, int y, int iterations){

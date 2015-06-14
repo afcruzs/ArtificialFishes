@@ -8,6 +8,7 @@ public class FeedingGenotype {
 	public FeedingGenotype(Type type) {
 		super();
 		this.type = type;
+		
 	}
 	
 	
