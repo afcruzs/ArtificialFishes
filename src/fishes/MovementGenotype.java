@@ -3,6 +3,9 @@ package fishes;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
+
+import aquarium.RandomUtils;
 
 /*
  * This genotype attempts to model a function
@@ -50,6 +53,21 @@ public class MovementGenotype {
 			else return -1;
 		}
 		
+		
+	}
+
+	public void mutate() {
+		Random r = new Random();
+		double tmp[] = {moveToFishProbability,moveToNothingProbability,moveToPlantProbability,stayProbability};
+		int substract = r.nextInt(tmp.length), add = r.nextInt( tmp.length );
+		double delta = RandomUtils.randDouble(0.0, tmp[substract]);
+		tmp[substract] -= delta;
+		tmp[add] -= delta;
+		
+		moveToFishProbability = tmp[0];
+		moveToNothingProbability = tmp[1];
+		moveToPlantProbability = tmp[2];
+		stayProbability = tmp[3];
 		
 	}
 	

@@ -5,8 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
+import java.util.Vector;
 
 import plants.Bushy;
 import plants.CustomStickyTree;
@@ -27,29 +30,45 @@ public class World {
 	List<DrawingTreeEntry> plants;
 
 	public World() {
-		fishes = new ArrayList<>();
-		plants = new ArrayList<>();
+		fishes = new Vector<>();
+		plants = new Vector<>();
 	}
 
 	/*
 	 * Performs an iteration of the fishes's world
 	 */
 	public void iterate() {
+		System.out.println(fishes.size()+" fishes");
+		if(fishes.isEmpty()) return;
+		List<Fish> offspring = null;
 		for (Fish fish : fishes) {
-			fish.move( getObservableObjects(fish)  );
-			fish.decreaseEnergy();
+			offspring = fish.act( getObservableObjects(fish)  );
+			fish.increaseAge();
 		}
+		
+		//Ohh the miracle of life :3
+		if( offspring.size() > 0 ) 
+			System.out.println(offspring.size()+" new fishes :3");
+		
+		fishes.addAll(offspring);
+		
+		reaper();
+	}
+	
+	
+	void reaper(){
+		Queue<Fish> deadFishes = new LinkedList<>();
+		for(Fish fish : fishes) 
+			if( !fish.isAlive() ) 
+				deadFishes.add(fish);
+		
+		while(!deadFishes.isEmpty())
+			fishes.remove(deadFishes.poll());
 	}
 
 	public List<ObservableEntity> getObservableObjects(Fish fish) {
-		Point coord = fish.getUbication();
-		int range = fish.getVisionRange();
-		coord.x -= range;
-		coord.y -= range;
-		Dimension dim = fish.getSize();
-		dim.setSize(dim.getWidth() + range, dim.getHeight() + range);
 
-		Rectangle bbox = new Rectangle(coord, dim);
+		Rectangle bbox = fish.getVisionBoundingBox();
 
 		ArrayList<ObservableEntity> l = new ArrayList<>();
 
@@ -125,8 +144,6 @@ public class World {
 	}
 
 	public void drawBackground(Graphics2D g) {
-		System.out.println("No background yet..");
-		// JEJEJE :v
 	}
 
 	/*
