@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 public class Controller {
 	static World world = null;
 	static View view = null;
+	static Thread evolutionThread = null;
 	
 	public static synchronized void init(){
 		if( view ==  null )
@@ -55,4 +56,24 @@ public class Controller {
 	public static void repaint() {
 		view.repaint();
 	}
+
+	public static void startEvolution() {
+		evolutionThread = new Thread(){
+			@Override
+			public void run(){
+				while(true){
+					world.iterate();
+					try {
+						sleep(300);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					repaint();
+				}
+			}
+		};
+		
+		evolutionThread.start();
+	}
+	
 }

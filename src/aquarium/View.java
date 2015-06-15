@@ -44,7 +44,8 @@ public class View extends JFrame {
 		
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setExtendedState( getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		//setExtendedState( getExtendedState() | JFrame.MAXIMIZED_BOTH);
+		setSize(500, 500);
 		
 	}
 	

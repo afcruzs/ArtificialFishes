@@ -12,6 +12,7 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 
 import aquarium.Controller;
+import aquarium.RandomUtils;
 import fishes.FeedingGenotype.Type;
 import fishes.MorphologyGenotype.BendAction.BendType;
 
@@ -62,45 +63,26 @@ public class RandomFishGenerator {
 		return after;
 	}
 	
-	/**
-	 * Returns a pseudo-random number between min and max, inclusive.
-	 * The difference between min and max can be at most
-	 * <code>Integer.MAX_VALUE - 1</code>.
-	 *
-	 * @param min Minimum value
-	 * @param max Maximum value.  Must be greater than min.
-	 * @return Integer between min and max, inclusive.
-	 * @see java.util.Random#nextInt(int)
-	 */
-	public static int randInt(int min, int max) {
-
-	    // NOTE: Usually this should be a field rather than a method
-	    // variable so that it is not re-seeded every call.
-	    Random rand = new Random();
-
-	    // nextInt is normally exclusive of the top value,
-	    // so add 1 to make it inclusive
-	    int randomNum = rand.nextInt((max - min) + 1) + min;
-
-	    return randomNum;
-	}
 	
-	
-	public static double randDouble(double start, double end) {
-
-		double random = new Random().nextDouble();
-		return start + (random * (end - start));
-	}
 	
 	static BendType randomBendType(){
 		return new Random().nextBoolean() ? BendType.HORIZONTAL : BendType.VERTICAL;
 	}
 	
+	static MovementGenotype randomMovementGenotype(){
+		Random r = new Random();
+		double a = (double)r.nextInt(100), b = (double)r.nextInt(100), c = (double)r.nextInt(100), d = (double)r.nextInt(100);
+		double N = a+b+c+d;
+		
+		return new MovementGenotype( a/N , b/N, c/N, d/N );
+		
+	}
+	
 	public static Fish randomFish() {
 		Random rand = new Random();
 		
-		SkinGenotype skinGenotype = new SkinGenotype( randDouble(10.0,30.0), randDouble(10.0,30.0), randDouble(10.0,30.0), 
-				randDouble(10.0,30.0), randDouble(10.0,30.0), randDouble(10.0,30.0), randDouble(10.0,30.0),
+		SkinGenotype skinGenotype = new SkinGenotype( RandomUtils.randDouble(10.0,30.0), RandomUtils.randDouble(10.0,30.0), RandomUtils.randDouble(10.0,30.0), 
+				RandomUtils.randDouble(10.0,30.0), RandomUtils.randDouble(10.0,30.0), RandomUtils.randDouble(10.0,30.0), RandomUtils.randDouble(10.0,30.0),
 				randomColor(), randomColor(), rand.nextInt(200));
 		
 		FeedingGenotype feedingGenotype = new FeedingGenotype(randomType());
@@ -108,8 +90,7 @@ public class RandomFishGenerator {
 		MorphologyGenotype morphologyGenotype = new MorphologyGenotype();
 		morphologyGenotype.addBendAction( randomBendType() , ( rand.nextBoolean() ? -1 : 1 )*rand.nextInt(50) );
 		
-		MovementGenotype movementType = new MovementGenotype( rand.nextDouble(), rand.nextDouble(),
-															  rand.nextDouble(), rand.nextDouble() );
+		MovementGenotype movementType = randomMovementGenotype();
 		
 		int reproductionAge = rand.nextInt(10);
 		int maximumLevelOfEnergy = rand.nextInt(30);
@@ -124,12 +105,12 @@ public class RandomFishGenerator {
 			fishTemplate = ImageIO.read(new File("fish0.png"));
 		} catch (IOException e) { e.printStackTrace(); } 
 		
-		int width = randInt(50,100);
-		int height = randInt(50,100);
+		int width = RandomUtils.randInt(50,100);
+		int height = RandomUtils.randInt(50,100);
 		Dimension dim = Controller.getDimension();
 		//Dimension dim = new Dimension(300,300);
-		int x = randInt(10,dim.width);
-		int y = randInt(10,dim.height);
+		int x = RandomUtils.randInt(10,dim.width);
+		int y = RandomUtils.randInt(10,dim.height);
 		return new Fish(fishTemplate, fishGenotype, x, y, width, height);
 	}
 }
