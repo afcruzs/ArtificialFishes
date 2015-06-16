@@ -11,6 +11,8 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.Vector;
 
+import org.apache.commons.math.geometry.Vector3D;
+
 import plants.Bushy;
 import plants.CustomStickyTree;
 import plants.DrawingTreeEntry;
@@ -32,25 +34,31 @@ public class World {
 	public World() {
 		fishes = new Vector<>();
 		plants = new Vector<>();
+		
 	}
 
 	/*
 	 * Performs an iteration of the fishes's world
 	 */
 	public void iterate() {
-		System.out.println(fishes.size()+" fishes");
-		if(fishes.isEmpty()) return;
-		List<Fish> offspring = null;
+//		System.out.println(fishes.size()+" fishes");
+//		if(fishes.isEmpty()) return;
+//		List<Fish> offspring = null;
+//		for (Fish fish : fishes) {
+//			offspring = fish.act( getObservableObjects(fish)  );
+//			fish.increaseAge();
+//		}
+//		
+//		//Ohh the miracle of life :3
+//		if( offspring.size() > 0 ) 
+//			System.out.println(offspring.size()+" new fishes :3");
+//		
+//		fishes.addAll(offspring);
+		
 		for (Fish fish : fishes) {
-			offspring = fish.act( getObservableObjects(fish)  );
+			fish.act( getObservableObjects(fish)  );
 			fish.increaseAge();
 		}
-		
-		//Ohh the miracle of life :3
-		if( offspring.size() > 0 ) 
-			System.out.println(offspring.size()+" new fishes :3");
-		
-		fishes.addAll(offspring);
 		
 		reaper();
 	}

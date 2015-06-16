@@ -62,6 +62,7 @@ public class Controller {
 		Dimension dim = getDimension();
 		Random r = new Random();
 		return new Point( r.nextInt((int) dim.getWidth()), r.nextInt((int) dim.getHeight()) );
+		//return new Point(300,300);
 	}
 
 	public static void startEvolution() {

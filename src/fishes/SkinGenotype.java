@@ -3,6 +3,8 @@ package fishes;
 import java.awt.Color;
 import java.util.Random;
 
+import aquarium.RandomUtils;
+
 /*
  * Defines the genotype of the fish's skin (Using a Turing Morph)
  */
@@ -33,7 +35,7 @@ public class SkinGenotype {
 
 	public void mutate() {
 		Random r = new Random();
-		int op = r.nextInt(10),op2;
+		int op = r.nextInt(10),op2,xd;
 		float re,g,b;
 		switch (op) {
 		case 0:
@@ -58,10 +60,26 @@ public class SkinGenotype {
 			bb += r.nextGaussian();
 			break;
 		case 7:
-	
+			op2 = r.nextInt(3);
+			xd = RandomUtils.randInt(0, 255);
+			if( op2 == 0 )
+				color1 = new Color(xd,color1.getGreen(),color1.getBlue());
+			else if( op2 == 1 )
+				color1 = new Color(color1.getRed(),xd,color1.getBlue());
+			else
+				color1 = new Color(color1.getRed(),color1.getGreen(),xd);
+			
 			break;
 		case 8:
-
+			op2 = r.nextInt(3);
+			xd = RandomUtils.randInt(0, 255);
+			if( op2 == 0 )
+				color2 = new Color(xd,color2.getGreen(),color2.getBlue());
+			else if( op2 == 1 )
+				color2 = new Color(color2.getRed(),xd,color2.getBlue());
+			else
+				color2 = new Color(color2.getRed(),color2.getGreen(),xd);
+			
 			break;
 			
 		default:

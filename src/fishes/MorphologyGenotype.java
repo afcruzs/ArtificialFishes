@@ -41,21 +41,25 @@ public class MorphologyGenotype {
 	}
 
 	public void mutate() {
-		Random r = new Random();
-		if (bends.isEmpty()) {
-			bends.add(new BendAction(r.nextInt(10),
-					r.nextBoolean() ? BendType.VERTICAL : BendType.HORIZONTAL));
-			
-		}else{
-			if( r.nextBoolean() ){
-				bends.add(new BendAction(r.nextInt(10),
-						r.nextBoolean() ? BendType.VERTICAL : BendType.HORIZONTAL));
-			}else{
-				int idx = r.nextInt(bends.size());
-				BendAction ba = bends.get(idx);
-				ba.offset += ba.offset*r.nextGaussian();
-				ba.offset = Math.max(10, ba.offset);
-			}
-		}
+		Random r = new Random();		
+		bends.clear();
+		bends.add(new BendAction(r.nextInt(10),
+				r.nextBoolean() ? BendType.VERTICAL : BendType.HORIZONTAL));
+
+//		if (bends.isEmpty()) {
+//			bends.add(new BendAction(r.nextInt(10),
+//					r.nextBoolean() ? BendType.VERTICAL : BendType.HORIZONTAL));
+//			
+//		}else{
+//			if( r.nextBoolean() ){
+//				bends.add(new BendAction(r.nextInt(10),
+//						r.nextBoolean() ? BendType.VERTICAL : BendType.HORIZONTAL));
+//			}else{
+//				int idx = r.nextInt(bends.size());
+//				BendAction ba = bends.get(idx);
+//				ba.offset += ba.offset*r.nextGaussian();
+//				ba.offset = Math.max(10, ba.offset);
+//			}
+//		}
 	}
 }

@@ -59,23 +59,28 @@ public class FishGenotype {
 
 		return new FishGenotype(
 
-		new SkinGenotype((Double) code[13], (Double) code[8], (Double) code[9],
-				(Double) code[11], (Double) code[12], (Double) code[4],
-				(Double) code[5], (Color) code[6], (Color) code[7],
-				(Integer) code[10]),
+				
+		new SkinGenotype((Double) code[11], (Double) code[6], (Double) code[7],
+				(Double) code[9], (Double) code[10], (Double) code[4],
+				(Double) code[5], new Color(((Integer) code[17]),
+						((Integer) code[18]), ((Integer) code[19])), new Color(
+						((Integer) code[20]), ((Integer) code[21]),
+						((Integer) code[22])),
+
+				(Integer) code[8]),
 
 		new FeedingGenotype((FeedingGenotype.Type) code[3]),
 
-		new MorphologyGenotype((List<BendAction>) code[14]),
+		new MorphologyGenotype((List<BendAction>) code[12]),
 
-		new MovementGenotype((Double) code[15], (Double) code[17],
-				(Double) code[18], (Double) code[16]),
+		new MovementGenotype((Double) code[13], (Double) code[15],
+				(Double) code[16], (Double) code[14]),
 
 		(Integer) code[0], (Integer) code[1], (Integer) code[2]);
 	}
 
 	static Object[] createRawGeneticCode(FishGenotype geno) {
-		Object[] code = new Object[19];
+		Object[] code = new Object[23];
 
 		code[0] = geno.reproductionAge;
 		code[1] = geno.maximumLevelOfEnergy;
@@ -83,19 +88,25 @@ public class FishGenotype {
 		code[3] = geno.feedingGenotype.type;
 		code[4] = geno.skinGenotype.ba;
 		code[5] = geno.skinGenotype.bb;
-		code[6] = geno.skinGenotype.color1;
-		code[7] = geno.skinGenotype.color2;
-		code[8] = geno.skinGenotype.Da;
-		code[9] = geno.skinGenotype.Db;
-		code[10] = geno.skinGenotype.iterations;
-		code[11] = geno.skinGenotype.ra;
-		code[12] = geno.skinGenotype.rb;
-		code[13] = geno.skinGenotype.s;
-		code[14] = geno.morphologyGenotype.bends;
-		code[15] = geno.movementGenotype.moveToFishProbability;
-		code[16] = geno.movementGenotype.moveToNothingProbability;
-		code[17] = geno.movementGenotype.moveToPlantProbability;
-		code[18] = geno.movementGenotype.stayProbability;
+		// code[6] = geno.skinGenotype.color1;
+		// code[7] = geno.skinGenotype.color2;
+		code[6] = geno.skinGenotype.Da;
+		code[7] = geno.skinGenotype.Db;
+		code[8] = geno.skinGenotype.iterations;
+		code[9] = geno.skinGenotype.ra;
+		code[10] = geno.skinGenotype.rb;
+		code[11] = geno.skinGenotype.s;
+		code[12] = geno.morphologyGenotype.bends;
+		code[13] = geno.movementGenotype.moveToFishProbability;
+		code[14] = geno.movementGenotype.moveToNothingProbability;
+		code[15] = geno.movementGenotype.moveToPlantProbability;
+		code[16] = geno.movementGenotype.stayProbability;
+		code[17] = geno.skinGenotype.color1.getRed();
+		code[18] = geno.skinGenotype.color1.getGreen();
+		code[19] = geno.skinGenotype.color1.getBlue();
+		code[20] = geno.skinGenotype.color2.getRed();
+		code[21] = geno.skinGenotype.color2.getGreen();
+		code[22] = geno.skinGenotype.color2.getBlue();
 		return code;
 	}
 
@@ -110,35 +121,36 @@ public class FishGenotype {
 		 */
 		int op = r.nextInt(7);
 		switch (op) {
-			case 0:
-				fishGenotype.skinGenotype.mutate();
-				break;
-			case 1:
-				fishGenotype.feedingGenotype.mutate();
-				break;
-	
-			case 2:
-				fishGenotype.morphologyGenotype.mutate();
-				break;
-	
-			case 3:
-				fishGenotype.movementGenotype.mutate();
-				break;
-	
-			case 5:
-	
-				fishGenotype.reproductionAge += r
-						.nextInt(fishGenotype.reproductionAge) * r.nextGaussian();
-				break;
-			case 6:
-				fishGenotype.maximumLevelOfEnergy += r
-						.nextInt(fishGenotype.maximumLevelOfEnergy) * r.nextGaussian();
-				break;
-				
-			default :
-				fishGenotype.visionRange += r
-						.nextInt(fishGenotype.visionRange) * r.nextGaussian();
-				break;
+		case 0:
+			fishGenotype.skinGenotype.mutate();
+			break;
+		case 1:
+			fishGenotype.feedingGenotype.mutate();
+			break;
+
+		case 2:
+			fishGenotype.morphologyGenotype.mutate();
+			break;
+
+		case 3:
+			fishGenotype.movementGenotype.mutate();
+			break;
+
+		case 5:
+
+			fishGenotype.reproductionAge += r
+					.nextInt(fishGenotype.reproductionAge) * r.nextGaussian();
+			break;
+		case 6:
+			fishGenotype.maximumLevelOfEnergy += r
+					.nextInt(fishGenotype.maximumLevelOfEnergy)
+					* r.nextGaussian();
+			break;
+
+		default:
+			fishGenotype.visionRange += r.nextInt(fishGenotype.visionRange)
+					* r.nextGaussian();
+			break;
 		}
 	}
 

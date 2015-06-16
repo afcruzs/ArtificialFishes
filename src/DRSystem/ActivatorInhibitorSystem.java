@@ -46,7 +46,7 @@ public class ActivatorInhibitorSystem {
 		this.y = y;
 		this.iterations = iterations;
 		randomInit();
-		iterateSystem();
+	//	iterateSystem();
 	}
 	
 	public ActivatorInhibitorSystem lightCopy(int rows, int cols){
@@ -105,11 +105,11 @@ public class ActivatorInhibitorSystem {
 	public void step(){
 		ArrayList<double[]> changesA = new ArrayList<double[]>();
 		ArrayList<double[]> changesB = new ArrayList<double[]>();
-		for (int i = 0; i < rows; i++) {
+		for (int i = 0; i < A.length; i++) {
 			int prev_i = i-1;
 			if( prev_i < 0 ) prev_i = rows-1;
 			int post_i = (i+1) % cols;
-			for (int j = 0; j < cols; j++) {
+			for (int j = 0; j < A[i].length; j++) {
 				int prev_j = j-1;
 				if( prev_j < 0 ) prev_j = cols-1;
 				int post_j = (j+1) % cols;

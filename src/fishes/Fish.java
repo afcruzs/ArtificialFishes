@@ -199,8 +199,8 @@ public class Fish implements ObservableEntity {
 		
 		
 		List<Fish> offspring = new Vector<Fish>();
-		if( age >= genotype.reproductionAge )
-			offspring = mate(fishes);
+//		if( age >= genotype.reproductionAge )
+//			offspring = mate(fishes);
 
 		if (getType().equals(FeedingGenotype.Type.CARNIVORE)
 				|| getType().equals(FeedingGenotype.Type.OMNIVORE))
@@ -230,11 +230,12 @@ public class Fish implements ObservableEntity {
 			FishGenotype.mutate(gens[0]);
 			FishGenotype.mutate(gens[1]);
 			
-			Point p1 = Controller.randomPointInWorld();
+			//Point p1 = Controller.randomPointInWorld();
+			Point p1 = new Point(300,300);
 			children.add(new Fish(image, gens[0], p1.x, p1.y
 					+ RandomUtils.randInt(-10, 10), width, height));
 			
-			p1 = Controller.randomPointInWorld();
+			//p1 = Controller.randomPointInWorld();
 			children.add(new Fish(image, gens[1], p1.x,p1.y
 					+ RandomUtils.randInt(-10, 10), width, height));
 		}
@@ -246,6 +247,7 @@ public class Fish implements ObservableEntity {
 	void eatPlants(List<DrawingTreeEntry> plants) {
 		if (plants.isEmpty())
 			return;
+		System.out.println("Eating plants...");
 		increaseEnergy(1);
 	}
 
@@ -256,6 +258,7 @@ public class Fish implements ObservableEntity {
 		Fish dam = fishes.get(r.nextInt(fishes.size()));
 
 		dam.energy = 0;
+		System.out.println("Eating Fishes...");
 		increaseEnergy(dam.genotype.maximumLevelOfEnergy);
 	}
 
@@ -379,6 +382,14 @@ public class Fish implements ObservableEntity {
 
 	public void increaseAge() {
 		age++;
+	}
+
+	public void setWidth(int i) {
+		width = i;
+	}
+	
+	public void setHeight(int h){
+		height = h;
 	}
 
 }
