@@ -46,7 +46,7 @@ public class ActivatorInhibitorSystem {
 		this.y = y;
 		this.iterations = iterations;
 		randomInit();
-	//	iterateSystem();
+		iterateSystem();
 	}
 	
 	public ActivatorInhibitorSystem lightCopy(int rows, int cols){
