@@ -60,18 +60,21 @@ public class FlockingVector extends Vector2D {
 		
 		int x2 = (int) (startPoint.x + getX());
 		int y2 = (int) (startPoint.y + getY());
-		g2.drawLine(startPoint.x, startPoint.y, x2, y2);
+		
 		g2.setColor(Color.RED);
 		
 		//Draws head
 		
-		g2.fillOval(x2-radius, y2-radius, 2*radius, 2*radius);
+		//g2.fillOval(x2-radius, y2-radius, 2*radius, 2*radius);
 		
-		//Draws 'body'
-		radius *= 2;
-		g2.setColor(Color.BLUE);
-		g2.fillOval(startPoint.x-radius, startPoint.y-radius, 2*radius, 2*radius);
+		g2.setColor(Color.black);
+		g2.drawLine(startPoint.x, startPoint.y, x2+10, y2+10);
 		
+//		//Draws 'body'
+//		radius *= 2;
+//		g2.setColor(Color.BLUE);
+//		g2.fillOval(startPoint.x-radius, startPoint.y-radius, 2*radius, 2*radius);
+//		
 	}
 
 }

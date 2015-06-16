@@ -1,21 +1,13 @@
 package DRSystem;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Stack;
-
-import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class ActivatorInhibitorSystem {
 	private double s;
@@ -27,6 +19,7 @@ public class ActivatorInhibitorSystem {
 	private double k;
 	int x,y;
 	private int iterations;
+	
 	public ActivatorInhibitorSystem(double s, double da, double db, double ra,
 			double rb, double ba, double bb, int rows, int cols,int x, int y, int iterations) {
 		super();
@@ -46,7 +39,7 @@ public class ActivatorInhibitorSystem {
 		this.y = y;
 		this.iterations = iterations;
 		randomInit();
-		iterateSystem();
+		//iterateSystem();
 	}
 	
 	public ActivatorInhibitorSystem lightCopy(int rows, int cols){
@@ -195,13 +188,8 @@ public class ActivatorInhibitorSystem {
 	boolean isTransparent(int pixel){
 		return (pixel>>24) == 0x00;
 	}
-		
-	public void draw(Graphics2D g, BufferedImage image, int[] colours, int width, int height){
-		
-		g.setRenderingHint(
-			    RenderingHints.KEY_ANTIALIASING,
-			    RenderingHints.VALUE_ANTIALIAS_ON);
-		
+	
+	public void paintFish(BufferedImage image,int[] colours){
 		double minMax[] = getMinMax(A);
 		double minRange = minMax[0];
 		double maxRange = minMax[1];
@@ -212,6 +200,13 @@ public class ActivatorInhibitorSystem {
 					image.setRGB( i, j, colours[ scale(255,minRange,maxRange,A[i][j]) ] );
 			}
 		}
+	}
+		
+	public void draw(Graphics2D g, BufferedImage image, int[] colours, int width, int height){
+		
+		g.setRenderingHint(
+			    RenderingHints.KEY_ANTIALIASING,
+			    RenderingHints.VALUE_ANTIALIAS_ON);
 		
  		//g.drawImage(image, x, y, null);
  		g.drawImage(image, x, y, x+width, y+height, 0, 0, image.getWidth(), image.getHeight(), null);

@@ -13,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import fishes.RandomFishGenerator;
 import aquarium.RandomUtils;
 
 public class Demo {
@@ -44,7 +45,7 @@ public class Demo {
 		Vector<FlockingAgent> v = new Vector<FlockingAgent>();
 		for (FlockingAgent ag : agents) {
 			double d = ag.distance(agent);
-			if (d <= FlockingAgent.NEIGHBOR_RAIDUS)
+			if (d <= ag.NEIGHBOR_RAIDUS)
 				v.add(ag);
 		}
 
@@ -92,9 +93,14 @@ public class Demo {
 	static void initAgents() {
 		int N = 500;
 		for (int i = 0; i < N; i++) {
-			FlockingAgent a1 = new FlockingAgent(new Point(RandomUtils.randInt(
-					0, mainFrame.getWidth()), RandomUtils.randInt(0, mainFrame.getHeight())), new FlockingVector(
-					RandomUtils.randInt(-300, 300), RandomUtils.randInt(-300, 300)));
+//			FlockingAgent a1 = new FlockingAgent(new Point(RandomUtils.randInt(
+//					0, mainFrame.getWidth()), RandomUtils.randInt(0, mainFrame.getHeight())), new FlockingVector(
+//					RandomUtils.randInt(-300, -1), RandomUtils.randInt(-300, -1)));
+			
+			
+			FlockingAgent a1 = RandomFishGenerator.randomFish();
+			
+			
 			agents.add(a1);
 		}
 	}

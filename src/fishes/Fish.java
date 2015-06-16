@@ -2,9 +2,12 @@ package fishes;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,8 +33,10 @@ import fishes.FeedingGenotype.Type;
 import fishes.MorphologyGenotype.BendAction;
 import fishes.MorphologyGenotype.BendAction.BendType;
 import fishes.MovementGenotype.ProbableMovement;
+import flocking.FlockingAgent;
+import flocking.FlockingVector;
 
-public class Fish implements ObservableEntity {
+public class Fish extends FlockingAgent implements ObservableEntity {
 
 	protected ActivatorInhibitorSystem system;
 	protected BufferedImage image;
@@ -40,9 +45,13 @@ public class Fish implements ObservableEntity {
 	protected int width, height;
 	protected int energy;
 	protected int age;
+	protected int orientation = 0;
 
 	public Fish(BufferedImage fishTemplate, FishGenotype fishGenotype, int x,
 			int y, int width, int height) {
+		super(new Point(x,y), new FlockingVector(RandomUtils.randInt(-300, 300), RandomUtils.randInt(-300, 300)) );
+		
+		//System.err.println(NEIGHBOR_RAIDUS);
 		this.image = fishTemplate;
 		this.genotype = fishGenotype;
 		this.width = width;
@@ -68,6 +77,7 @@ public class Fish implements ObservableEntity {
 
 		energy = genotype.maximumLevelOfEnergy;
 		age = 0;
+		system.paintFish(image,colours);
 	}
 
 	public Point getUbication() {
@@ -77,6 +87,7 @@ public class Fish implements ObservableEntity {
 	@Deprecated
 	public Fish(Color c1, Color c2, double s, double da, double db, double ra,
 			double rb, double ba, double bb, int x, int y, int iterations) {
+		super(new Point(x,y), new FlockingVector(10, 10) );
 		colours = new int[256];
 		colours[0] = c1.getRGB();
 		colours[1] = c2.getRGB();
@@ -160,12 +171,26 @@ public class Fish implements ObservableEntity {
 		
 		return new Rectangle(coord, dim);
 	}
+	
+	public void act( Vector<FlockingAgent> neighbors ){
+		super.act(neighbors);
+		system.setX(position.x);
+		system.setY(position.y);
+	}
+	
+	@Override
+	public void draw(Graphics g) {
+		
+		
+		draw((Graphics2D)g);
+		//velocityVector.draw((Graphics2D)g, position);
+	}
 
 	public void draw(Graphics2D g) {
 		// system.step();
 		
-		Rectangle bbox = getVisionBoundingBox();
-		g.draw(bbox);
+//		Rectangle bbox = getVisionBoundingBox();
+//		g.draw(bbox);
 		system.draw(g, image, colours, width, height);
 	}
 
@@ -217,7 +242,7 @@ public class Fish implements ObservableEntity {
 
 	List<Fish> mate(List<Fish> fishes) {
 		
-		if(fishes.size() > 0) System.err.println(fishes.size()+" To mate..");
+		//if(fishes.size() > 0) System.err.println(fishes.size()+" To mate..");
 		
 		List<Fish> children = new ArrayList<Fish>();
 		for (Fish coup : fishes) {

@@ -7,18 +7,22 @@ import java.awt.Point;
 import java.util.Vector;
 
 public class FlockingAgent {
-	public static int NEIGHBOR_RAIDUS = 50;
-	public static int SEPARATION_RAIDUS = 6;
-	public static int MAX_FORCE = 5;
+	public int NEIGHBOR_RAIDUS = 50;
+	public int SEPARATION_RAIDUS = 6;
+	public int MAX_FORCE = 5;
 	
 	static double SEPARATION_W = 2.0, ALIGN_W = 1.0, COHESION_W = 0.4;
 	
-	private FlockingVector velocityVector; 
-	private Point position;
+	protected FlockingVector velocityVector; 
+	protected Point position;
 	
 	public FlockingAgent(Point position, FlockingVector velocityVector){
 		this.position = position;
-		this.velocityVector = velocityVector.limit(MAX_FORCE); 
+		this.velocityVector = velocityVector.limit(MAX_FORCE);
+	}
+	
+	protected double getVelocityNorm(){
+		return velocityVector.getX()*velocityVector.getY();
 	}
 	
 	public void setVector(int x, int y){
@@ -155,7 +159,7 @@ public class FlockingAgent {
 //		g.drawOval(position.x-SEPARATION_RAIDUS, position.y-SEPARATION_RAIDUS, 2*SEPARATION_RAIDUS, 2*SEPARATION_RAIDUS);
 //		
 		g2.setColor(prev);
-		//velocityVector.draw(g2,position);
+		velocityVector.draw(g2,position);
 		//Draw the actual body... abstract class maybe? Template pattern? :D
 		g2.setColor(prev);
 		
