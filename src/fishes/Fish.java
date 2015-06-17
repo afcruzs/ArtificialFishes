@@ -174,6 +174,7 @@ public class Fish extends FlockingAgent implements ObservableEntity {
 	
 	public void act( Vector<FlockingAgent> neighbors ){
 		super.act(neighbors);
+		Point position = getPosition();
 		system.setX(position.x);
 		system.setY(position.y);
 	}

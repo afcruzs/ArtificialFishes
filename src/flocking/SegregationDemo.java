@@ -1,22 +1,16 @@
 package flocking;
 
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import fishes.RandomFishGenerator;
-import aquarium.RandomUtils;
-
-public class Demo {
+public class SegregationDemo {
 	static JFrame mainFrame;
 	static JPanel panel = null;
 	static Vector<FlockingAgent> agents = new Vector<>();
@@ -91,8 +85,8 @@ public class Demo {
 	static void initAgents() {
 		int N = 500;
 		for (int i = 0; i < N; i++) {
-			FlockingAgent a1 = FlockingAgent.randomFlockingAgent(mainFrame.getSize());
-		//	 FlockingAgent a1 = RandomFishGenerator.randomFish();
+			SegregationFlockingAgent a1 = SegregationFlockingAgent.randomSegregationFlockingAgent(mainFrame.getSize());
+		//	 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish();
 
 			agents.add(a1);
 		}
