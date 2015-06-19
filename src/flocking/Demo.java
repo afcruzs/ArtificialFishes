@@ -28,7 +28,7 @@ public class Demo {
 			while (true){
 				lel++;
 				try {
-					sleep(1);
+					sleep(50);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -91,8 +91,8 @@ public class Demo {
 	static void initAgents() {
 		int N = 500;
 		for (int i = 0; i < N; i++) {
-			FlockingAgent a1 = FlockingAgent.randomFlockingAgent(mainFrame.getSize());
-		//	 FlockingAgent a1 = RandomFishGenerator.randomFish();
+			//FlockingAgent a1 = FlockingAgent.randomFlockingAgent(mainFrame.getSize());
+			 FlockingAgent a1 = RandomFishGenerator.randomFish();
 
 			agents.add(a1);
 		}

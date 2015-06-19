@@ -25,6 +25,8 @@ import javax.imageio.ImageIO;
 import plants.DrawingTreeEntry;
 import DRSystem.ActivatorInhibitorSystem;
 import affineTransforms.NonLinearTransform;
+import aquarium.AlgorithmUtils;
+import aquarium.ColorUtils;
 import aquarium.Controller;
 import aquarium.ObservableEntity;
 import aquarium.RandomUtils;
@@ -35,8 +37,9 @@ import fishes.MorphologyGenotype.BendAction.BendType;
 import fishes.MovementGenotype.ProbableMovement;
 import flocking.FlockingAgent;
 import flocking.FlockingVector;
+import flocking.SegregationFlockingAgent;
 
-public class Fish extends FlockingAgent implements ObservableEntity {
+public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 
 	protected ActivatorInhibitorSystem system;
 	protected BufferedImage image;
@@ -240,6 +243,38 @@ public class Fish extends FlockingAgent implements ObservableEntity {
 		
 		return offspring;
 	}
+	
+	
+	
+	static double colorDifference(Fish f1, Fish f2){
+//		//Set size equal ...
+//		double sum = 0.0;
+//		int rows = Math.min(f1.image.getHeight(),f2.image.getHeight())-1;
+//		int cols = Math.min(f1.image.getWidth(),f2.image.getWidth())-1;
+////		System.out.println(rows+" "+cols);
+////		System.out.println(f1.image.getHeight()+" "+f1.image.getWidth());
+////		System.out.println(f2.image.getHeight()+" "+f2.image.getWidth());
+//		int cnt = 0;
+//		for(int i=0; i<cols; i++){
+//			for(int j=0; j<rows; j++){
+//				if( ColorUtils.isTransparent(f1.image.getRGB(i,j)) || ColorUtils.isTransparent(f1.image.getRGB(i,j)) )
+//					continue;
+//				cnt++;
+//				Color e1 = null,e2 = null;
+//				e1 = new Color(f1.image.getRGB(i,j));
+//				e2 = new Color(f2.image.getRGB(i,j));
+//				sum += ColorUtils.ColourDistance(e1, e2);
+//				
+//			}
+//		}
+//		
+//		return sum/(cnt);
+//		
+//		double d1 = ColorUtils.ColourDistance(f1.getColor1(), f2.getColor1());
+//		double d2 = ColorUtils.ColourDistance(f1.getColor1(), f2.getColor2());
+//		return (d1+d2)/2.0;
+		return ColorUtils.ColourDistance(f1.system.averageColor, f2.system.averageColor);
+	}
 
 	List<Fish> mate(List<Fish> fishes) {
 		
@@ -416,6 +451,19 @@ public class Fish extends FlockingAgent implements ObservableEntity {
 	
 	public void setHeight(int h){
 		height = h;
+	}
+
+	public Color getColor1() {
+		return genotype.skinGenotype.color1;
+	}
+	
+	public Color getColor2() {
+		return genotype.skinGenotype.color2;
+	}
+
+	@Override
+	public boolean segregationFunction(SegregationFlockingAgent agent) {
+		return colorDifference(this, (Fish)agent) >= 0.4;
 	}
 
 }

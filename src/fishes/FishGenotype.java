@@ -139,11 +139,11 @@ public class FishGenotype {
 		case 5:
 
 			fishGenotype.reproductionAge += r
-					.nextInt(fishGenotype.reproductionAge) * r.nextGaussian();
+					.nextInt(fishGenotype.reproductionAge+1) * r.nextGaussian();
 			break;
 		case 6:
 			fishGenotype.maximumLevelOfEnergy += r
-					.nextInt(fishGenotype.maximumLevelOfEnergy)
+					.nextInt(Math.max(fishGenotype.maximumLevelOfEnergy+1,0))
 					* r.nextGaussian();
 			break;
 

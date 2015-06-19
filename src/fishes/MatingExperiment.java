@@ -1,8 +1,8 @@
 package fishes;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -19,7 +19,9 @@ public class MatingExperiment {
 	static Fish off1 = null;
 	static Fish off2 = null;
 	static JFrame frame ;
+	static double diff;
 	public static void main(String[] args) {
+		diff = Fish.colorDifference(fish1, fish2);
 		fish1.setX(10);
 		fish1.setY(30);
 		
@@ -77,6 +79,7 @@ public class MatingExperiment {
 								fish2.setWidth(300);
 								fish2.setHeight(300);
 								
+								diff = Fish.colorDifference(fish1, fish2);
 							}
 						});
 					}
@@ -89,12 +92,13 @@ public class MatingExperiment {
 				fish1.draw(g2d);
 				fish2.draw(g2d);
 				
-				if(off1 != null)
-					off1.draw(g2d);
-				
-				if(off2 != null)
-					off2.draw(g2d);
-				
+				g2d.setColor(fish1.getColor1());
+				g2d.fillRect(10, 340, 50, 50);
+				g2d.setColor(fish1.getColor2());
+				g2d.fillRect(60, 340, 50, 50);
+				g2d.setColor(fish1.system.averageColor);
+				g2d.fillRect(110, 340, 50, 50);
+				g2d.drawString(diff+"", 10, 400);
 			}
 		});
 		

@@ -105,7 +105,7 @@ public class RandomFishGenerator {
 			fishTemplate = ImageIO.read(new File("fish0.png"));
 		} catch (IOException e) { e.printStackTrace(); } 
 		
-		int sz = 10;
+		int sz = 100;
 		int width = RandomUtils.randInt(sz/2,sz);
 		int height = RandomUtils.randInt(sz/2,sz);
 	//	Dimension dim = Controller.getDimension();

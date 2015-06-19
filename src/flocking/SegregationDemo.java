@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import fishes.RandomFishGenerator;
+
 public class SegregationDemo {
 	static JFrame mainFrame;
 	static JPanel panel = null;
@@ -22,7 +24,7 @@ public class SegregationDemo {
 			while (true){
 				lel++;
 				try {
-					sleep(1);
+					sleep(100);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -71,6 +73,18 @@ public class SegregationDemo {
 						});
 					}
 				});
+				
+				add(new JButton("Pause") {
+					{
+						addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								go.stop();
+							}
+						});
+					}
+				});
 			}
 
 			@Override
@@ -83,10 +97,10 @@ public class SegregationDemo {
 	}
 
 	static void initAgents() {
-		int N = 500;
+		int N = 20;
 		for (int i = 0; i < N; i++) {
-			SegregationFlockingAgent a1 = SegregationFlockingAgent.randomSegregationFlockingAgent(mainFrame.getSize());
-		//	 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish();
+			//SegregationFlockingAgent a1 = SegregationFlockingAgent.randomSegregationFlockingAgent(mainFrame.getSize());
+			 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish();
 
 			agents.add(a1);
 		}

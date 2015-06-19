@@ -5,15 +5,21 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.util.Random;
+import java.awt.Polygon;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.util.Vector;
 
+import aquarium.ConstructFishesArea;
 import aquarium.RandomUtils;
 
 public class FlockingAgent {
 
 	static final double SEPARATION_W = 1.5, ALIGN_W = 1.0, COHESION_W = 1.0;
-	
+	static Shape fishOutLine = null;
+	static {
+		fishOutLine = (Shape) ConstructFishesArea.readFile("fishOutLine");
+	}
 	protected double NEIGHBOR_RAIDUS = 50.0;
 	protected double SEPARATION_RAIDUS = 25.0;
 	protected double MAX_ENERGY = 10.0;
@@ -26,16 +32,16 @@ public class FlockingAgent {
 	protected FlockingVector acceleration;
 	protected double energy;
 	protected double mass;
-	
-	//protected Color color;
-	
+
+	// protected Color color;
+
 	public static FlockingAgent randomFlockingAgent(Dimension bounds) {
-		FlockingAgent agent = new FlockingAgent(new Point(RandomUtils.randInt(0,
-				(int) bounds.getWidth()), RandomUtils.randInt(0,
+		FlockingAgent agent = new FlockingAgent(new Point(RandomUtils.randInt(
+				0, (int) bounds.getWidth()), RandomUtils.randInt(0,
 				(int) bounds.getHeight())), new FlockingVector(
 				Math.cos(RandomUtils.randDouble(-2 * Math.PI, 2 * Math.PI)),
 				Math.sin(RandomUtils.randDouble(-2 * Math.PI, 2 * Math.PI))));
-		
+
 		agent.NEIGHBOR_RAIDUS = 50.0;
 		agent.SEPARATION_RAIDUS = 25.0;
 		return agent;
@@ -46,22 +52,21 @@ public class FlockingAgent {
 		velocity = velocityVector;
 		location = new FlockingVector(position.x, position.y);
 		mass = 1.0;
-		energy = MAX_ENERGY/2.0;
-		
-		
+		energy = MAX_ENERGY / 2.0;
+
 	}
-	
-	public void sumToEnergy(double delta){
+
+	public void sumToEnergy(double delta) {
 		energy += delta;
 	}
-	
-	public int countNeighbors(Vector<FlockingAgent> neighbors,double R){
+
+	public int countNeighbors(Vector<FlockingAgent> neighbors, double R) {
 		int ctr = 0;
-		for(FlockingAgent ag : neighbors){
-			if( distance(ag) < R )
+		for (FlockingAgent ag : neighbors) {
+			if (distance(ag) < R)
 				ctr++;
 		}
-		
+
 		return ctr;
 	}
 
@@ -96,7 +101,7 @@ public class FlockingAgent {
 		applyForce(cohesion);
 
 	}
-	
+
 	/*
 	 * 
 	 */
@@ -106,7 +111,7 @@ public class FlockingAgent {
 
 		for (FlockingAgent agent : neighbors) {
 			double d = location.distance(agent.location);
-			if (d > 0 && d < SEPARATION_RAIDUS ) {
+			if (d > 0 && d < SEPARATION_RAIDUS) {
 				FlockingVector diff = location.subtract(agent.location);
 				diff = diff.normalize().scalarDivide(d);
 				steer = steer.add(diff);
@@ -131,7 +136,7 @@ public class FlockingAgent {
 		int count = 0;
 		for (FlockingAgent agent : neighbors) {
 			double d = location.distance(agent.location);
-			if (d > 0 && d < NEIGHBOR_RAIDUS ) {
+			if (d > 0 && d < NEIGHBOR_RAIDUS) {
 				sum = sum.add(agent.velocity);
 				count++;
 			}
@@ -157,7 +162,7 @@ public class FlockingAgent {
 
 		for (FlockingAgent agent : neighbors) {
 			double d = location.distance(agent.location);
-			if (d > 0.0 && d < NEIGHBOR_RAIDUS ) {
+			if (d > 0.0 && d < NEIGHBOR_RAIDUS) {
 				sum = sum.add(agent.location);
 				count++;
 			}
@@ -194,12 +199,9 @@ public class FlockingAgent {
 		Graphics2D g2 = (Graphics2D) g;
 		int radius = 5;
 		Color prev = g2.getColor();
-		g2.fillOval((int) location.getX() - radius, (int) location.getY()
-				- radius, 2 * radius, 2 * radius);
-
+		 g2.fillOval((int) location.getX() - radius, (int) location.getY()
+		 - radius, 2 * radius, 2 * radius);
 		
-		Point position = getPosition();
-
 		// g2.setColor(Color.GREEN);
 		// g2.draw(new Ellipse2D.Double(position.x-NEIGHBOR_RAIDUS,
 		// position.y-NEIGHBOR_RAIDUS, 2*NEIGHBOR_RAIDUS, 2*NEIGHBOR_RAIDUS));

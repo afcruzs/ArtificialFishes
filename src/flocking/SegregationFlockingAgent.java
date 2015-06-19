@@ -8,9 +8,10 @@ import java.awt.Point;
 import java.util.Random;
 import java.util.Vector;
 
+import aquarium.ColorUtils;
 import aquarium.RandomUtils;
 
-public class SegregationFlockingAgent extends FlockingAgent {
+public abstract class SegregationFlockingAgent extends FlockingAgent {
 	private Color color;
 	
 	public SegregationFlockingAgent(Point position,
@@ -35,7 +36,11 @@ public class SegregationFlockingAgent extends FlockingAgent {
 			
 		default:
 			break;
+			
+			
 		}
+		
+		color = ColorUtils.randomColor();
 	}
 	
 	FlockingVector alignVector(Vector<FlockingAgent> neighbors) {
@@ -43,7 +48,7 @@ public class SegregationFlockingAgent extends FlockingAgent {
 		int count = 0;
 		for (FlockingAgent agent : neighbors) {
 			double d = location.distance(agent.location);
-			if (d > 0 && d < NEIGHBOR_RAIDUS && ((SegregationFlockingAgent)agent).color.equals(color)) {
+			if (d > 0 && d < NEIGHBOR_RAIDUS && !segregationFunction((SegregationFlockingAgent) agent) ) {
 				sum = sum.add(agent.velocity);
 				count++;
 			}
@@ -67,7 +72,7 @@ public class SegregationFlockingAgent extends FlockingAgent {
 
 		for (FlockingAgent agent : neighbors) {
 			double d = location.distance(agent.location);
-			if (d > 0.0 && d < NEIGHBOR_RAIDUS && color.equals(((SegregationFlockingAgent)agent).color)) {
+			if (d > 0.0 && d < NEIGHBOR_RAIDUS && !segregationFunction((SegregationFlockingAgent) agent) ) {
 				sum = sum.add(agent.location);
 				count++;
 			}
@@ -93,18 +98,34 @@ public class SegregationFlockingAgent extends FlockingAgent {
 		g2.setColor(prev);
 
 	}
+	
+	protected Color getC(){
+		return color;
+	}
 
 	public static SegregationFlockingAgent randomSegregationFlockingAgent(
 			Dimension bounds) {
+		
+		
 		SegregationFlockingAgent agent = new SegregationFlockingAgent(new Point(RandomUtils.randInt(0,
 				(int) bounds.getWidth()), RandomUtils.randInt(0,
 				(int) bounds.getHeight())), new FlockingVector(
 				Math.cos(RandomUtils.randDouble(-2 * Math.PI, 2 * Math.PI)),
-				Math.sin(RandomUtils.randDouble(-2 * Math.PI, 2 * Math.PI))));
+				Math.sin(RandomUtils.randDouble(-2 * Math.PI, 2 * Math.PI)))){
+
+			@Override
+			public boolean segregationFunction(SegregationFlockingAgent agent) {
+				return 1.0-ColorUtils.ColourDistance(getC(), agent.color) <= 0.8;
+			}
+			
+		};
 		
 		agent.NEIGHBOR_RAIDUS = 50.0;
 		agent.SEPARATION_RAIDUS = 25.0;
 		return agent;
 	}
+	
+	//Returns true if this agent wants to segregate agent
+	abstract public boolean segregationFunction(SegregationFlockingAgent agent);
 
 }

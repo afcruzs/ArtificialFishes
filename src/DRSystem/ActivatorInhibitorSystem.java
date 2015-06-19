@@ -3,11 +3,15 @@ package DRSystem;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
+
+import aquarium.ColorUtils;
+import aquarium.ConstructFishesArea;
 
 public class ActivatorInhibitorSystem {
 	private double s;
@@ -15,10 +19,11 @@ public class ActivatorInhibitorSystem {
 	private double ra, 	rb;
 	private double ba, bb;
 	private double A[][], B[][];
-	private int rows, cols;
 	private double k;
 	int x,y;
 	private int iterations;
+	public Color averageColor;
+	
 	
 	public ActivatorInhibitorSystem(double s, double da, double db, double ra,
 			double rb, double ba, double bb, int rows, int cols,int x, int y, int iterations) {
@@ -30,8 +35,6 @@ public class ActivatorInhibitorSystem {
 		this.rb = rb;
 		this.ba = ba;
 		this.bb = bb;
-		this.rows = rows;
-		this.cols = cols;
 		this.A = new double[rows][cols];
 		this.B = new double[rows][cols];
 		this.k = 0.01;
@@ -50,16 +53,17 @@ public class ActivatorInhibitorSystem {
 	public void iterateSystem(){
 		for(int i=0; i<iterations; i++)
 			step();
+		
 	}
 	
 	public int getRows() {
-		return rows;
+		return A.length;
 	}
 
 
 
 	public int getCols() {
-		return cols;
+		return A[0].length;
 	}
 
 
@@ -82,30 +86,18 @@ public class ActivatorInhibitorSystem {
 	
 	
 
-	
-	public void setRows(int rows) {
-		this.rows = rows;
-	}
-
-
-
-	public void setCols(int cols) {
-		this.cols = cols;
-	}
-
-
 
 	public void step(){
 		ArrayList<double[]> changesA = new ArrayList<double[]>();
 		ArrayList<double[]> changesB = new ArrayList<double[]>();
-		for (int i = 0; i < A.length; i++) {
+		for (int i = 1; i < A.length; i++) {
 			int prev_i = i-1;
-			if( prev_i < 0 ) prev_i = rows-1;
-			int post_i = (i+1) % cols;
-			for (int j = 0; j < A[i].length; j++) {
+			if( prev_i < 0 ) prev_i = getRows()-1;
+			int post_i = (i+1) % getCols();
+			for (int j = 1; j < A[i].length; j++) {
 				int prev_j = j-1;
-				if( prev_j < 0 ) prev_j = cols-1;
-				int post_j = (j+1) % cols;
+				if( prev_j < 0 ) prev_j = getCols()-1;
+				int post_j = (j+1) % getCols();
 				
 				double aith = A[i][j] + s*( A[i][j]*A[i][j]/B[i][j] + ba ) -
 						ra*A[i][j] + Da*( A[prev_i][j] + A[post_i][j] - 2*A[i][j] );
@@ -153,8 +145,8 @@ public class ActivatorInhibitorSystem {
 	
 	void randomInit(){
 		Random r = new Random();
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
+		for (int i = 0; i < getRows(); i++) {
+			for (int j = 0; j < getCols(); j++) {
 				this.A[i][j] = r.nextDouble();
 				this.B[i][j] = r.nextDouble();
 				
@@ -174,8 +166,8 @@ public class ActivatorInhibitorSystem {
 	public double[] getMinMax(double data[][]){
 		double min = Double.POSITIVE_INFINITY;
 		double max = Double.NEGATIVE_INFINITY;
-		for(int i=0; i<rows; i++){
-			for(int j=0; j<cols; j++){
+		for(int i=0; i<getRows(); i++){
+			for(int j=0; j<getCols(); j++){
 				min = Math.min(min, data[i][j]);
 				max = Math.max(max,data[i][j]);
 			}
@@ -193,13 +185,21 @@ public class ActivatorInhibitorSystem {
 		double minMax[] = getMinMax(A);
 		double minRange = minMax[0];
 		double maxRange = minMax[1];
+		
+		Color c = null;
  		
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				if( !isTransparent(image.getRGB(i, j)) && image.getRGB(i, j) != Color.BLACK.getRGB() )
+		for (int i = 0; i < getRows(); i++) {
+			for (int j = 0; j < getCols(); j++) {
+				if( !isTransparent(image.getRGB(i, j)) && image.getRGB(i, j) != Color.BLACK.getRGB() ){
 					image.setRGB( i, j, colours[ scale(255,minRange,maxRange,A[i][j]) ] );
+					Color t = new Color(colours[ scale(255,minRange,maxRange,A[i][j]) ]);
+					if( c == null ) c = t;
+					else c = ColorUtils.blend(c, t);
+				}
 			}
 		}
+		
+		averageColor = c;
 	}
 		
 	public void draw(Graphics2D g, BufferedImage image, int[] colours, int width, int height){
@@ -210,9 +210,10 @@ public class ActivatorInhibitorSystem {
 		
  		//g.drawImage(image, x, y, null);
  		g.drawImage(image, x, y, x+width, y+height, 0, 0, image.getWidth(), image.getHeight(), null);
+		
 	}
 
-//	public static void main(String[] args) throws IOException {
+//	public static void main(String[] args) thgetRows() IOException {
 //		double s = 11.5;
 //		double da = 18.5;
 //		double db = 12.5;
@@ -228,10 +229,10 @@ public class ActivatorInhibitorSystem {
 //		for(int i=2; i<colours.length; i++){
 //			colours[i] = new Color(colours[i-1]|colours[i-2]).darker().getRGB();
 //		}
-//		final BufferedImage image = /*new BufferedImage(rows, cols, BufferedImage.TYPE_INT_RGB);*/
+//		final BufferedImage image = /*new BufferedImage(getRows(), getCols(), BufferedImage.TYPE_INT_RGB);*/
 //				ImageIO.read(new File("fish0.png")); 
-//		int rows = image.getWidth(), cols = image.getHeight();
-//		final ActivatorInhibitorSystem system = new ActivatorInhibitorSystem(s, da, db, ra, rb, ba, bb, rows,cols,0,0,1);
+//		int getRows() = image.getWidth(), getCols() = image.getHeight();
+//		final ActivatorInhibitorSystem system = new ActivatorInhibitorSystem(s, da, db, ra, rb, ba, bb, getRows(),getCols(),0,0,1);
 //		
 //
 //		
@@ -247,10 +248,10 @@ public class ActivatorInhibitorSystem {
 //		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //		frame.setVisible(true);
 //		frame.add(panel);
-//		frame.setSize(rows, cols);
+//		frame.setSize(getRows(), getCols());
 //		
 //		
-//		//for(int i=0; i<rows; i++) System.out.println(Arrays.toString(system.A[i]));
+//		//for(int i=0; i<getRows(); i++) System.out.println(Arrays.toString(system.A[i]));
 //		new Thread(){
 //			@Override
 //			public void run(){
@@ -265,7 +266,7 @@ public class ActivatorInhibitorSystem {
 //		}.start();
 //		
 //		//double xd[][] = system.scaleData(system.A);
-//		//for(int i=0; i<rows; i++) System.out.println(Arrays.toString(xd[i]));
+//		//for(int i=0; i<getRows(); i++) System.out.println(Arrays.toString(xd[i]));
 //	}
 	
 	

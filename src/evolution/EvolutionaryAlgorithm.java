@@ -41,7 +41,7 @@ public class EvolutionaryAlgorithm<T extends Population> {
 			life.live(population); //'Lives', i.e Iterates a new cycle in the individuals life, in order to measure fitness
 			   //This can be omitted and measure fitness directly from the genotype.
 			
-			System.out.println(population.size() + " " + population.getBestIndividual().fitness());
+			//System.out.println(population.size() + " " + population.getBestIndividual().fitness());
 			
 			
 			List<Evolvable> currentPopulation = selection.selectIndividuals(population); //Selection,TODO: to be improved by composition...
@@ -82,6 +82,17 @@ public class EvolutionaryAlgorithm<T extends Population> {
 	
 	public Evolvable evolveBestIndividual(TerminationCondition condition){
 		return evolve(Integer.MAX_VALUE,condition).getBestIndividual();
+	}
+	
+	
+	public Evolvable evolveBestIndividual(int iterations){
+		return evolve(iterations, new TerminationCondition() {
+			
+			@Override
+			public boolean isOptimal(Evolvable evolvable) {
+				return false;
+			}
+		}).getBestIndividual();
 	}
 
 }
