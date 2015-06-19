@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import fishes.Fish;
 import fishes.RandomFishGenerator;
 
 public class SegregationDemo {
@@ -24,7 +25,7 @@ public class SegregationDemo {
 			while (true){
 				lel++;
 				try {
-					sleep(100);
+					sleep(10);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -97,7 +98,7 @@ public class SegregationDemo {
 	}
 
 	static void initAgents() {
-		int N = 20;
+		int N = 500;
 		for (int i = 0; i < N; i++) {
 			//SegregationFlockingAgent a1 = SegregationFlockingAgent.randomSegregationFlockingAgent(mainFrame.getSize());
 			 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish();
@@ -119,5 +120,9 @@ public class SegregationDemo {
 
 	public static void main(String[] args) {
 		init();
+	}
+
+	public static boolean checkNewPosition(FlockingVector location,FlockingAgent original) {
+		return true;
 	}
 }

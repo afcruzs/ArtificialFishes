@@ -10,6 +10,8 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.util.Vector;
 
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+
 import aquarium.ConstructFishesArea;
 import aquarium.RandomUtils;
 
@@ -21,7 +23,7 @@ public class FlockingAgent {
 		fishOutLine = (Shape) ConstructFishesArea.readFile("fishOutLine");
 	}
 	protected double NEIGHBOR_RAIDUS = 50.0;
-	protected double SEPARATION_RAIDUS = 25.0;
+	protected double SEPARATION_RAIDUS = 35.0;
 	protected double MAX_ENERGY = 10.0;
 
 	protected double MAX_FORCE = 2.0;
@@ -187,8 +189,14 @@ public class FlockingAgent {
 
 	// Move according to acceleration
 	public void move() {
-		velocity = velocity.add(acceleration).limit(MAX_SPEED);
-		location = location.add(velocity);
+		FlockingVector velocity = this.velocity.add(acceleration).limit(MAX_SPEED);
+		FlockingVector location = this.location.add(velocity);
+		if( SegregationDemo.checkNewPosition(location,this) ){
+			this.velocity = velocity;
+			this.location = location;
+		}
+			
+			
 		acceleration = acceleration.scalarMultiply(0.0);
 	}
 
