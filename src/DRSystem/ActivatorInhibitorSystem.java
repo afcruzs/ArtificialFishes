@@ -209,8 +209,9 @@ public class ActivatorInhibitorSystem {
 			    RenderingHints.VALUE_ANTIALIAS_ON);
 		
  		//g.drawImage(image, x, y, null);
- 		g.drawImage(image, x, y, x+width, y+height, 0, 0, image.getWidth(), image.getHeight(), null);
 		
+		//g.drawImage(image,af,null);
+ 		g.drawImage(image, x, y, x+width, y+height, 0, 0, image.getWidth(), image.getHeight(), null);		
 	}
 
 //	public static void main(String[] args) thgetRows() IOException {

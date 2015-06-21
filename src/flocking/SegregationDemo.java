@@ -25,7 +25,7 @@ public class SegregationDemo {
 			while (true){
 				lel++;
 				try {
-					sleep(10);
+					sleep(100);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -100,7 +100,7 @@ public class SegregationDemo {
 	static void initAgents() {
 		int N = 500;
 		for (int i = 0; i < N; i++) {
-			//SegregationFlockingAgent a1 = SegregationFlockingAgent.randomSegregationFlockingAgent(mainFrame.getSize());
+		//	SegregationFlockingAgent a1 = SegregationFlockingAgent.randomSegregationFlockingAgent(mainFrame.getSize());
 			 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish();
 
 			agents.add(a1);

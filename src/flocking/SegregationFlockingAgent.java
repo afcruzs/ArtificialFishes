@@ -40,6 +40,7 @@ public abstract class SegregationFlockingAgent extends FlockingAgent {
 			
 		}
 		
+		
 		color = ColorUtils.randomColor();
 	}
 	

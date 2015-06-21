@@ -10,6 +10,11 @@ public class Controller {
 	static View view = null;
 	static Thread evolutionThread = null;
 	
+	public static void main(String[] args) {
+		run();
+	}
+
+	
 	public static synchronized void init(){
 		if( view ==  null )
 			view = getView();
@@ -44,44 +49,27 @@ public class Controller {
 		return getView().getSize();
 	}
 	
-	
-	
-	public static void main(String[] args) {
-		run();
-	}
-
-	public static void start() {
-		world.start();
-	}
-
 	public static void repaint() {
 		view.repaint();
 	}
 	
-	public static Point randomPointInWorld(){
-		Dimension dim = getDimension();
-		Random r = new Random();
-		return new Point( r.nextInt((int) dim.getWidth()), r.nextInt((int) dim.getHeight()) );
-		//return new Point(300,300);
+
+	
+	public static void callBackOnIteration(){
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		view.repaint();
 	}
 
 	public static void startEvolution() {
+		world.birth(100);
 		evolutionThread = new Thread(){
 			@Override
 			public void run(){
-				int it = 0;
-				while(true){
-					System.out.println("iteration: "+it);
-					world.iterate();
-					try {
-						sleep(300);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					repaint();
-					
-					it++;
-				}
+				world.iterate(500);
 			}
 		};
 		

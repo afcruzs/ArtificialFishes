@@ -7,7 +7,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -22,15 +21,16 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+
 import plants.DrawingTreeEntry;
 import DRSystem.ActivatorInhibitorSystem;
 import affineTransforms.NonLinearTransform;
-import aquarium.AlgorithmUtils;
 import aquarium.ColorUtils;
 import aquarium.Controller;
 import aquarium.ObservableEntity;
 import aquarium.RandomUtils;
-import aquarium.World.EmptyPoint;
+
 import fishes.FeedingGenotype.Type;
 import fishes.MorphologyGenotype.BendAction;
 import fishes.MorphologyGenotype.BendAction.BendType;
@@ -195,7 +195,11 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 		
 //		Rectangle bbox = getVisionBoundingBox();
 //		g.draw(bbox);
+		
+		double rotation = velocity.angle();
+	    
 		system.draw(g, image, colours, width, height);
+		
 	}
 
 	public int getVisionRange() {
@@ -216,34 +220,6 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 		return genotype.feedingGenotype.type;
 	}
 
-	public List<Fish> act(List<ObservableEntity> observableObjects) {
-
-		ArrayList<Fish> fishes = new ArrayList<>();
-		ArrayList<DrawingTreeEntry> plants = new ArrayList<>();
-		for (ObservableEntity oe : observableObjects)
-			if (oe instanceof Fish)
-				fishes.add((Fish) oe);
-			else if (oe instanceof DrawingTreeEntry)
-				plants.add((DrawingTreeEntry) oe);
-		
-		
-		List<Fish> offspring = new Vector<Fish>();
-//		if( age >= genotype.reproductionAge )
-//			offspring = mate(fishes);
-
-		if (getType().equals(FeedingGenotype.Type.CARNIVORE)
-				|| getType().equals(FeedingGenotype.Type.OMNIVORE))
-			eatFishes(fishes);
-
-		if (getType().equals(FeedingGenotype.Type.OMNIVORE)
-				|| getType().equals(FeedingGenotype.Type.HERBIVORE))
-			eatPlants(plants);
-
-		move(observableObjects);
-		
-		return offspring;
-	}
-	
 	
 	
 	static double colorDifference(Fish f1, Fish f2){
@@ -327,119 +303,6 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 		energy = Math.min(genotype.maximumLevelOfEnergy, energy + plus);
 	}
 
-	void move(List<ObservableEntity> observableObjects) {
-		int fishes = 0, plants = 0, nothing = 0;
-		for (ObservableEntity oe : observableObjects) {
-			if (oe instanceof Fish)
-				fishes++;
-			else if (oe instanceof DrawingTreeEntry)
-				plants++;
-			else if (oe instanceof EmptyPoint)
-				nothing++;
-		}
-
-		List<ProbableMovement> movements = genotype.movementGenotype
-				.getSortedMovements();
-
-		Queue<Integer> toDelete = new LinkedList<>();
-		for (int i = 0; i < movements.size(); i++) {
-			ProbableMovement pm = movements.get(i);
-			if (fishes == 0 && pm.type.equals(MovementGenotype.FISH))
-				toDelete.add(i);
-			else if (plants == 0 && pm.type.equals(MovementGenotype.PLANT))
-				toDelete.add(i);
-			else if (nothing == 0 && pm.type.equals(MovementGenotype.NOTHING))
-				toDelete.add(i);
-		}
-
-		while (!toDelete.isEmpty())
-			movements.remove(toDelete.poll());
-
-		double acm[] = new double[movements.size()];
-
-		acm[0] = movements.get(0).probability;
-		for (int i = 1; i < acm.length; i++)
-			acm[i] = acm[i - 1] + movements.get(i).probability;
-
-		double roulette = Math.random();
-		int i;
-		for (i = 0; i < acm.length; i++) {
-			if (roulette <= acm[i])
-				break;
-		}
-
-		if (movements.get(i).type.equals(MovementGenotype.STAY))
-			return;
-		decreaseEnergy();
-		Collections.shuffle(observableObjects);
-		for (ObservableEntity oe : observableObjects) {
-			if ((oe instanceof Fish)
-					&& movements.get(i).type.equals(MovementGenotype.FISH)) {
-				doMove(oe.getUbication());
-				break;
-			} else if ((oe instanceof DrawingTreeEntry)
-					&& movements.get(i).type.equals(MovementGenotype.PLANT)) {
-				doMove(oe.getUbication());
-				break;
-			} else if ((oe instanceof EmptyPoint)
-					&& movements.get(i).type.equals(MovementGenotype.NOTHING)) {
-				doMove(oe.getUbication());
-				break;
-			}
-		}
-	}
-
-	void doMove(final Point p) {
-		ArrayList<Point> tmp = new ArrayList<>();
-		tmp.add(new Point(p.x - 1, p.y));
-		tmp.add(new Point(p.x - 1, p.y + 1));
-		tmp.add(new Point(p.x - 1, p.y - 1));
-
-		tmp.add(new Point(p.x, p.y - 1));
-		tmp.add(new Point(p.x, p.y + 1));
-		tmp.add(new Point(p.x, p.y));
-
-		tmp.add(new Point(p.x + 1, p.y));
-		tmp.add(new Point(p.x + 1, p.y + 1));
-		tmp.add(new Point(p.x + 1, p.y - 1));
-
-		Collections.sort(tmp, new Comparator<Point>() {
-
-			@Override
-			public int compare(Point o1, Point o2) {
-				double d1 = o1.distance(p);
-				double d2 = o1.distance(p);
-				if (d1 < d2)
-					return -1;
-				else if (d1 > d2)
-					return 1;
-				else
-					return 0;
-			}
-
-		});
-
-		// Performs movement..
-		Point target = tmp.get(0);
-
-		Dimension dim = Controller.getDimension();
-		if (target.x > dim.getWidth())
-			target.x = 0;
-		if (target.y > dim.getHeight())
-			target.y = 0;
-		if (target.x < 0)
-			target.x = (int) (dim.getWidth());
-		if (target.y < 0)
-			target.y = (int) (dim.getHeight());
-
-		system.setX(target.x);
-		system.setY(target.y);
-
-	}
-
-	public boolean isAlive() {
-		return energy > 0;
-	}
 
 	public void increaseAge() {
 		age++;

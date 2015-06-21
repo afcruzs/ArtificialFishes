@@ -48,6 +48,10 @@ public class FlockingVector extends Vector2D {
 		if( getNorm() == 0.0 ) return this;
 		return new FlockingVector(super.normalize());
 	}
+	
+	public double angle(){
+		return Math.atan(getY()/getX());
+	}
 
 	public void draw(Graphics2D g2, Point startPoint){
 		

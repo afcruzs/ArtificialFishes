@@ -46,6 +46,7 @@ public class FlockingAgent {
 
 		agent.NEIGHBOR_RAIDUS = 50.0;
 		agent.SEPARATION_RAIDUS = 25.0;
+		
 		return agent;
 	}
 
@@ -55,7 +56,7 @@ public class FlockingAgent {
 		location = new FlockingVector(position.x, position.y);
 		mass = 1.0;
 		energy = MAX_ENERGY / 2.0;
-
+		
 	}
 
 	public void sumToEnergy(double delta) {

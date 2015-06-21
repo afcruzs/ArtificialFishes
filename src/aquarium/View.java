@@ -23,7 +23,7 @@ public class View extends JFrame {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Controller.start();					
+					Controller.startEvolution();				
 				}
 			});
 			add(initButton);
