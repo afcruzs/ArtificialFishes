@@ -34,6 +34,7 @@ public class ColorUtils {
 //    					  (e1.getBlue()-e2.getBlue())*(e1.getBlue()-e2.getBlue()) ) / 441.16729559;
     }
     
+    
     public static boolean isTransparent(int pixel){
 		return (pixel>>24) == 0x00;
 	}
@@ -63,6 +64,7 @@ public class ColorUtils {
       }
     
     public static void main(String[] args) {
+    	//System.out.println( ColourDistance(Color.BLACK, Color.WHITE) );
     	double maxm = -1.0;
     	for(int i=0; i<1000; i++){
     		@SuppressWarnings("unchecked")

@@ -16,6 +16,7 @@ public class ViewBar extends JMenuBar {
 	JMenuItem startSimulation;
 	JMenuItem pauseSimulation;
 	JMenuItem stopSimulation;
+	JMenuItem fishes;
 	
 	
 	
@@ -52,6 +53,7 @@ public class ViewBar extends JMenuBar {
 		startSimulation = new JMenuItem("Start");
 		pauseSimulation = new JMenuItem("Pause");
 		stopSimulation = new JMenuItem("Stop");
+		fishes = new JMenuItem("Fishes");
 		
 		pauseSimulation.setEnabled(false);
 		stopSimulation.setEnabled(false);
@@ -88,7 +90,13 @@ public class ViewBar extends JMenuBar {
 			}
 		});
 		
-		
+		fishes.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Controller.openFishesVisualizer();
+			}
+		});
 		
 		
 		add(simulation);
@@ -97,6 +105,8 @@ public class ViewBar extends JMenuBar {
 		simulation.add(pauseSimulation);
 		simulation.add(new JSeparator());
 		simulation.add(stopSimulation);
+		simulation.add(new JSeparator());
+		simulation.add(fishes);
 	}
 
 

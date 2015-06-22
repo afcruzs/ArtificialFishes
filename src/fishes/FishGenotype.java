@@ -139,16 +139,16 @@ public class FishGenotype {
 		case 5:
 
 			fishGenotype.reproductionAge += r
-					.nextInt(fishGenotype.reproductionAge+1) * r.nextGaussian();
+					.nextInt(Math.max(fishGenotype.reproductionAge,1)) * r.nextGaussian();
 			break;
 		case 6:
 			fishGenotype.maximumLevelOfEnergy += r
-					.nextInt(Math.max(fishGenotype.maximumLevelOfEnergy+1,0))
+					.nextInt(Math.max(fishGenotype.maximumLevelOfEnergy,1))
 					* r.nextGaussian();
 			break;
 
 		default:
-			fishGenotype.visionRange += r.nextInt(fishGenotype.visionRange)
+			fishGenotype.visionRange += r.nextInt(Math.max(fishGenotype.visionRange,1))
 					* r.nextGaussian();
 			break;
 		}

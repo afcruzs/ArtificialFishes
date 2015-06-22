@@ -249,4 +249,6 @@ public class FlockingAgent {
 		location = new FlockingVector((double) x, (double) y);
 	}
 
+
+
 }

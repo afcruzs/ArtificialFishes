@@ -14,8 +14,8 @@ import javax.swing.JPanel;
 
 public class MatingExperiment {
 	
-	static Fish fish1 = RandomFishGenerator.randomFish();
-	static Fish fish2 = RandomFishGenerator.randomFish();
+	static Fish fish1 = RandomFishGenerator.randomFish(100);
+	static Fish fish2 = RandomFishGenerator.randomFish(100);
 	static Fish off1 = null;
 	static Fish off2 = null;
 	static JFrame frame ;

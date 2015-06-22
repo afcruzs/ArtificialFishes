@@ -213,6 +213,13 @@ public class ActivatorInhibitorSystem {
 		//g.drawImage(image,af,null);
  		g.drawImage(image, x, y, x+width, y+height, 0, 0, image.getWidth(), image.getHeight(), null);		
 	}
+	
+	public void drawInCorner(Graphics2D g, BufferedImage image, int[] colours, int width, int height){
+		g.setRenderingHint(
+			    RenderingHints.KEY_ANTIALIASING,
+			    RenderingHints.VALUE_ANTIALIAS_ON);
+		g.drawImage(image, 0, 0, width, height, 0, 0, image.getWidth(), image.getHeight(), null);
+	}
 
 //	public static void main(String[] args) thgetRows() IOException {
 //		double s = 11.5;

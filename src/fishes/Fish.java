@@ -49,7 +49,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	protected int energy;
 	protected int age;
 	protected int orientation = 0;
-
+	private boolean iterated;
 	public Fish(BufferedImage fishTemplate, FishGenotype fishGenotype, int x,
 			int y, int width, int height) {
 		super(new Point(x,y), new FlockingVector(RandomUtils.randInt(-300, 300), RandomUtils.randInt(-300, 300)) );
@@ -80,6 +80,11 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 
 		energy = genotype.maximumLevelOfEnergy;
 		age = 0;
+		iterated = false;
+		paintFish();
+	}
+	
+	public void paintFish(){
 		system.paintFish(image,colours);
 	}
 
@@ -182,12 +187,13 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 		system.setY(position.y);
 	}
 	
+	public void drawInCorner(Graphics g){
+		g.drawImage(image, 0, 0, null);
+	}
+	
 	@Override
 	public void draw(Graphics g) {
-		
-		
 		draw((Graphics2D)g);
-		//velocityVector.draw((Graphics2D)g, position);
 	}
 
 	public void draw(Graphics2D g) {
@@ -196,7 +202,6 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 //		Rectangle bbox = getVisionBoundingBox();
 //		g.draw(bbox);
 		
-		double rotation = velocity.angle();
 	    
 		system.draw(g, image, colours, width, height);
 		
@@ -208,8 +213,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 
 	@Override
 	public Rectangle getBoundingBox() {
-		return new Rectangle(getUbication(), new Dimension(image.getWidth(),
-				image.getHeight()));
+		return new Rectangle(getUbication(), new Dimension(width, height));
 	}
 
 	public void decreaseEnergy() {
@@ -222,7 +226,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 
 	
 	
-	static double colorDifference(Fish f1, Fish f2){
+	public static double colorDifference(Fish f1, Fish f2){
 //		//Set size equal ...
 //		double sum = 0.0;
 //		int rows = Math.min(f1.image.getHeight(),f2.image.getHeight())-1;
@@ -252,7 +256,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 		return ColorUtils.ColourDistance(f1.system.averageColor, f2.system.averageColor);
 	}
 
-	List<Fish> mate(List<Fish> fishes) {
+	public List<Fish> mate(List<Fish> fishes) {
 		
 		//if(fishes.size() > 0) System.err.println(fishes.size()+" To mate..");
 		
@@ -327,6 +331,21 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	@Override
 	public boolean segregationFunction(SegregationFlockingAgent agent) {
 		return colorDifference(this, (Fish)agent) >= 0.4;
+	}
+
+	public void iterateSystem() {
+		if( !iterated )
+			system.iterateSystem();
+		iterated = true;
+		paintFish();
+	}
+
+	public int getImageWidth() {
+		return image.getWidth();
+	}
+	
+	public int getImageHeight(){
+		return image.getHeight();
 	}
 
 }

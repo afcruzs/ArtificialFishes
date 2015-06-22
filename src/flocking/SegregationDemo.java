@@ -101,7 +101,7 @@ public class SegregationDemo {
 		int N = 500;
 		for (int i = 0; i < N; i++) {
 		//	SegregationFlockingAgent a1 = SegregationFlockingAgent.randomSegregationFlockingAgent(mainFrame.getSize());
-			 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish();
+			 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish(30);
 
 			agents.add(a1);
 		}

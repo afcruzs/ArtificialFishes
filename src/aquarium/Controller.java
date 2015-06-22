@@ -1,7 +1,10 @@
 package aquarium;
 
+import fishes.Fish;
+import fishes.RandomFishGenerator;
 import flocking.FlockingAgent;
 import gui.EditFrame;
+import gui.FishesVisualizer;
 import gui.View;
 
 import java.awt.Dimension;
@@ -9,6 +12,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Random;
 
+import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 
 public class Controller {
@@ -33,10 +37,10 @@ public class Controller {
 			view = getView();
 		if( world == null )
 			world = getWorld();
-		numberOfGenerations = 1;
+		numberOfGenerations = 50;
 		numberOfIterationsPerGeneration = 400;
-		populationSize = 1;
-		sleepTime = 100;
+		populationSize = 10;
+		sleepTime = 0;
 		fishSize = 30;
 		
 	}
@@ -79,6 +83,7 @@ public class Controller {
 		paused = b;
 	}
 
+	static int it = 0;
 	public static void callBackOnIteration(){
 		if(getFinished()) return;
 		while(getPaused());
@@ -88,6 +93,8 @@ public class Controller {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		view.setTitle(it+"");
+		it++;
 		view.repaint();
 	}
 
@@ -101,6 +108,7 @@ public class Controller {
 			@Override
 			public void run(){
 				for(int i=0; i<numberOfGenerations; i++){
+					it = 0;
 					world.iterate(numberOfIterationsPerGeneration);
 					world.evolutionPopulation();
 				}
@@ -197,6 +205,29 @@ public class Controller {
 	public static void setFishSize(int parseInt) {
 		FlockingAgent.setSeparationRadius( ((double)parseInt)*0.9 );
 		fishSize = parseInt;
+	}
+
+
+	public static Fish[] getFishesArray() {
+//		Fish[] f = {RandomFishGenerator.randomFish(30)};
+//		return f;
+		return world.getFishesArray();
+	}
+
+
+	public static void openFishesVisualizer() {
+		SwingUtilities.invokeLater(new Runnable() {
+			
+			@Override
+			public void run() {
+				new FishesVisualizer();
+			}
+		});
+	}
+
+
+	public static Fish getFishIn(Point point) {
+		return world.getFishIn(point);
 	}
 	
 }

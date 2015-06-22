@@ -3,8 +3,17 @@ package aquarium;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Random;
 import java.util.Vector;
+
+import javax.swing.JOptionPane;
 
 import plants.Bushy;
 import plants.CustomStickyTree;
@@ -80,7 +89,7 @@ public class World {
 	/*
 	 * Draws fishes Ohh not surprising...
 	 */
-	public void drawFishes(Graphics2D g) {
+	public synchronized void drawFishes(Graphics2D g) {
 		for (FlockingAgent fish : fishes) {
 			fish.draw(g);
 		}
@@ -126,15 +135,100 @@ public class World {
 		addTree(new Bushy(), 5, 1350, 0);
 	}
 	
+	int countNeighbors(Fish fish){
+		int ctr = 0;
+		for(FlockingAgent agent : fishes){
+			Fish neigh = (Fish)agent;
+			if( agent.distance(fish) <= Fish.NEIGHBOR_RAIDUS  )
+				ctr++;
+//			else System.out.println(Fish.colorDifference(neigh,fish));
+		}
+		
+		return ctr;
+	}
+	
+	List<Fish> getPartners(final Fish fish){
+		List<Fish> partners = new ArrayList<>();
+		for(FlockingAgent agent : fishes){
+			Fish neigh = (Fish)agent;
+			if( agent.distance(fish) <= Fish.NEIGHBOR_RAIDUS  )
+				partners.add(neigh);
+		}
+		
+		Collections.sort(partners, new Comparator<Fish>() {
+
+			@Override
+			public int compare(Fish o1, Fish o2) {
+				double d1 = o1.distance(fish);
+				double d2 = o1.distance(fish);
+				if(d1 < d2) return -1;
+				else if(d1 == d2) return 0;
+				else return 1;
+			}
+		});
+		
+		if( partners.size() < 2 ) return partners;
+		return partners.subList(0, 2);
+	}
+	
 	public void evolutionPopulation(){
+		
+		int initial = fishes.size();
+		
+		int MINIMUM_FISHES = (int) Math.ceil((double)initial/10.0);
+		Queue<Fish> q = new LinkedList<>();
+		Random r = new Random();
 		for(FlockingAgent agent : fishes){
 			Fish fish = (Fish)agent;
+			int n = countNeighbors(fish);
+			if( n < MINIMUM_FISHES ){
+				double p = (double)n/(double)MINIMUM_FISHES;
+				if( Math.random() > p )
+					q.add(fish);
+			}
 			//Evolve the curren population!
 			//Offspring
 			//Reproduction, mutation
 			//NO FITNESS!, small interactions...
 		}
 		
+		while(!q.isEmpty()) fishes.remove(q.poll());
+		
+		for(FlockingAgent agent : fishes){
+			Fish fish = (Fish)agent;
+			List<Fish> partners = getPartners(fish);
+			q.addAll( fish.mate(partners) );
+		}
+		
+		fishes.clear();
+		while(!q.isEmpty()) fishes.add(q.poll());
+		JOptionPane.showMessageDialog(null, fishes.size()-initial);
+		
 		//reaper();
+	}
+
+	public Fish[] getFishesArray() {
+		Fish array[] = new Fish[fishes.size()];
+		for(int i=0; i<fishes.size(); i++){
+			array[i] = (Fish) fishes.get(i);
+		}
+		Arrays.sort(array,new Comparator<Fish>(){
+
+			@Override
+			public int compare(Fish o1, Fish o2) {
+				
+				return o1.getX()-o2.getX();
+			}
+		});
+		return array;
+	}
+
+	public Fish getFishIn(Point point) {
+		
+		for(int i=0; i<fishes.size(); i++)
+			if( ((Fish)fishes.get(i)).getBoundingBox().contains(point) ) 
+				return (Fish)fishes.get(i);
+		
+		return null;
 	}
 }
