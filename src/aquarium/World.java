@@ -32,7 +32,7 @@ public class World {
 	
 	void initAgents(int N) {
 		for (int i = 0; i < N; i++) {
-			 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish();
+			 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish(Controller.getFishSize());
 
 			 fishes.add(a1);
 		}
@@ -48,7 +48,9 @@ public class World {
 	}
 	
 	public void iterate(int iterations){
-		while(iterations-- > 0) singleStep();
+		while(iterations-- > 0){
+			singleStep();
+		}
 	}
 	
 	static void torus(FlockingAgent ag) {

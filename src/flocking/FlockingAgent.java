@@ -22,9 +22,9 @@ public class FlockingAgent {
 	static {
 		fishOutLine = (Shape) ConstructFishesArea.readFile("fishOutLine");
 	}
-	protected double NEIGHBOR_RAIDUS = 50.0;
-	protected double SEPARATION_RAIDUS = 35.0;
-	protected double MAX_ENERGY = 10.0;
+	public static double NEIGHBOR_RAIDUS = 50.0;
+	public static double SEPARATION_RAIDUS = 35.0;
+	protected static double MAX_ENERGY = 10.0;
 
 	protected double MAX_FORCE = 2.0;
 	protected double MAX_SPEED = 10.03;
@@ -44,12 +44,21 @@ public class FlockingAgent {
 				Math.cos(RandomUtils.randDouble(-2 * Math.PI, 2 * Math.PI)),
 				Math.sin(RandomUtils.randDouble(-2 * Math.PI, 2 * Math.PI))));
 
-		agent.NEIGHBOR_RAIDUS = 50.0;
-		agent.SEPARATION_RAIDUS = 25.0;
+		//NEIGHBOR_RAIDUS = 50.0;
+		//SEPARATION_RAIDUS = 25.0;
 		
 		return agent;
 	}
-
+	
+	public static void setSeparationRadius(double d){
+		SEPARATION_RAIDUS = d;
+	}
+	
+	
+	public static void setNeighborRadius(double d){
+		NEIGHBOR_RAIDUS = d;
+	}
+	
 	public FlockingAgent(Point position, FlockingVector velocityVector) {
 		acceleration = new FlockingVector(1.0, 1.0);
 		velocity = velocityVector;

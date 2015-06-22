@@ -1,14 +1,27 @@
 package aquarium;
 
+import flocking.FlockingAgent;
+import gui.EditFrame;
+import gui.View;
+
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Random;
 
+import javax.swing.SwingUtilities;
+
 public class Controller {
 	static World world = null;
 	static View view = null;
 	static Thread evolutionThread = null;
+	private static boolean paused = false;
+	private static boolean finished = false;
+	private static int numberOfGenerations;
+	private static int numberOfIterationsPerGeneration;
+	private static int populationSize;
+	private static long sleepTime;
+	private static int fishSize;
 	
 	public static void main(String[] args) {
 		run();
@@ -20,6 +33,11 @@ public class Controller {
 			view = getView();
 		if( world == null )
 			world = getWorld();
+		numberOfGenerations = 1;
+		numberOfIterationsPerGeneration = 400;
+		populationSize = 1;
+		sleepTime = 100;
+		fishSize = 30;
 		
 	}
 	
@@ -53,11 +71,20 @@ public class Controller {
 		view.repaint();
 	}
 	
-
+	static synchronized boolean getPaused(){
+		return paused;
+	}
 	
+	static synchronized void setPaused(boolean b){
+		paused = b;
+	}
+
 	public static void callBackOnIteration(){
+		if(getFinished()) return;
+		while(getPaused());
+		
 		try {
-			Thread.sleep(100);
+			Thread.sleep(getSleepTimeVal());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -65,15 +92,111 @@ public class Controller {
 	}
 
 	public static void startEvolution() {
-		world.birth(100);
+		if(paused){
+			setPaused(false);
+			return;
+		}
+		world.birth(populationSize);
 		evolutionThread = new Thread(){
 			@Override
 			public void run(){
-				world.iterate(500);
+				for(int i=0; i<numberOfGenerations; i++){
+					world.iterate(numberOfIterationsPerGeneration);
+					world.evolutionPopulation();
+				}
+				
+				onFinishedSimulation();
 			}
 		};
 		
 		evolutionThread.start();
+	}
+
+
+	public static void pauseSimulation() {
+		setPaused(true);
+	}
+
+
+	public static void openEditFrame() {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new EditFrame();
+			}
+		});
+	}
+
+
+	public static int getPopulation() {
+		return populationSize;
+	}
+
+
+	public static int getGenerations() {
+		return numberOfGenerations;
+	}
+
+
+	public static int getIterations() {
+		return numberOfIterationsPerGeneration;
+	}
+
+
+	public static void setPopulationSize(int parseInt) {
+		populationSize = parseInt;
+	}
+
+
+	public static void setNumberOfGenerationsPerIteration(int parseInt) {
+		numberOfGenerations = parseInt;
+	}
+
+
+	public static void setNumberOfIterations(int parseInt) {
+		numberOfIterationsPerGeneration = parseInt;
+	}
+
+	public static synchronized long getSleepTimeVal() {
+		return sleepTime;
+	}
+
+	public static long getSleepTime() {
+		return sleepTime;
+	}
+	
+	public static synchronized void setSleepTime(long l){
+		sleepTime = l;
+	}
+	
+	public static void onFinishedSimulation(){
+		view.onFinishedSimulation();
+		setFinished(false);
+		setPaused(false);
+	}
+	
+	public static synchronized void setFinished(boolean g){
+		finished = g;
+	}
+	
+	public static synchronized boolean getFinished(){
+		return finished;
+	}
+
+
+	public static void stopSimulation() {
+		setFinished(true);
+	}
+
+
+	public static int getFishSize() {
+		return fishSize;
+	}
+
+
+	public static void setFishSize(int parseInt) {
+		FlockingAgent.setSeparationRadius( ((double)parseInt)*0.9 );
+		fishSize = parseInt;
 	}
 	
 }

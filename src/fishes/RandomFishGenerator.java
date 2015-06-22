@@ -18,6 +18,8 @@ import fishes.MorphologyGenotype.BendAction.BendType;
 
 public class RandomFishGenerator {
 	
+	
+	
 	private  static Color randomColor(){
 		Random rand = new Random();
 		float r = rand.nextFloat();
@@ -78,7 +80,7 @@ public class RandomFishGenerator {
 		
 	}
 	
-	public static Fish randomFish() {
+	public static Fish randomFish(int sz) {
 		Random rand = new Random();
 		
 		SkinGenotype skinGenotype = new SkinGenotype( RandomUtils.randDouble(10.0,30.0), RandomUtils.randDouble(10.0,30.0), RandomUtils.randDouble(10.0,30.0), 
@@ -105,7 +107,6 @@ public class RandomFishGenerator {
 			fishTemplate = ImageIO.read(new File("fish0.png"));
 		} catch (IOException e) { e.printStackTrace(); } 
 		
-		int sz = 30;
 		int width = RandomUtils.randInt(sz/2,sz);
 		int height = RandomUtils.randInt(sz/2,sz);
 	//	Dimension dim = Controller.getDimension();
