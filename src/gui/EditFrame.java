@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,6 +25,8 @@ public class EditFrame extends JFrame {
 	
 	JTextField populationField, generationsField, iterationsField,sleepTimeField,fishSizeField,
 			   radiusField, separationField;
+	
+	JCheckBox animationCheckBox;
 	
 	public EditFrame() {
 		super("Simulation settings");
@@ -49,6 +52,7 @@ public class EditFrame extends JFrame {
 					Controller.setFishSize(Integer.parseInt(fishSizeField.getText()));
 					FlockingAgent.setNeighborRadius( Double.parseDouble(radiusField.getText()) );
 					FlockingAgent.setSeparationRadius( Double.parseDouble(separationField.getText()) );
+					Controller.setAnimation(animationCheckBox.isSelected());
 					parent.dispatchEvent(new WindowEvent(parent, WindowEvent.WINDOW_CLOSING));
 				}
 			});
@@ -83,6 +87,9 @@ public class EditFrame extends JFrame {
 			radiusField = new DoubleJTextField( String.valueOf(FlockingAgent.NEIGHBOR_RAIDUS) );
 			separationField = new DoubleJTextField( String.valueOf(FlockingAgent.SEPARATION_RAIDUS) );
 			
+			animationCheckBox = new JCheckBox();
+			
+			animationCheckBox.setSelected(Controller.getAnimation());
 			
 			add(new JLabel("Initial Population") );
 			add(populationField);
@@ -105,6 +112,10 @@ public class EditFrame extends JFrame {
 			
 			add(new JLabel("Separation Radius") );
 			add(separationField);
+			
+			add(new JLabel("Animation") );
+			add(animationCheckBox);
+			
 		}
 	}
 	

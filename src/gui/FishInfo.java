@@ -17,6 +17,8 @@ public class FishInfo extends JPanel{
 		canvas = new Canvas();
 		add(canvas);
 		fish = null;
+		
+		
 	}
 	
 	public void setFish(Fish f){
@@ -27,8 +29,9 @@ public class FishInfo extends JPanel{
 		@Override
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
-			if(fish != null)
+			if(fish != null){
 				fish.drawInCorner(g);
+			}
 		}
 		
 		

@@ -9,6 +9,15 @@ import aquarium.RandomUtils;
  * Defines the genotype of the fish's skin (Using a Turing Morph)
  */
 public class SkinGenotype {
+	@Override
+	public String toString() {
+		return "SkinGenotype [s=" + s + ", Da=" + Da + ", Db=" + Db + ", ra="
+				+ ra + ", rb=" + rb + ", ba=" + ba + ", bb=" + bb + ", color1="
+				+ color1 + ", color2=" + color2 + ", iterations=" + iterations
+				+ "]";
+	}
+
+
 	protected double s;
 	protected double Da, Db;
 	protected double ra, 	rb;
@@ -83,7 +92,7 @@ public class SkinGenotype {
 			break;
 			
 		default:
-			iterations += r.nextInt(iterations)*r.nextGaussian();
+			iterations += r.nextInt(Math.max(1, iterations))*r.nextGaussian();
 			iterations = Math.max(iterations, 1);
 			break;
 		}

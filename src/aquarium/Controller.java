@@ -26,6 +26,7 @@ public class Controller {
 	private static int populationSize;
 	private static long sleepTime;
 	private static int fishSize;
+	private static boolean animation = true;
 	
 	public static void main(String[] args) {
 		run();
@@ -82,20 +83,28 @@ public class Controller {
 	static synchronized void setPaused(boolean b){
 		paused = b;
 	}
+	
+	static void updateTitle(){
+		view.setTitle( "Generation: " + String.valueOf(world.getCurrentGeneration()) + 
+				      " Iteration: "+String.valueOf(world.getCurrentIteration())  +
+				      " Population size: " + String.valueOf(world.getPopulationSize()) );
+	}
 
-	static int it = 0;
 	public static void callBackOnIteration(){
+		
 		if(getFinished()) return;
 		while(getPaused());
+		
+		view.repaint();
+		if( !animation ) return;
 		
 		try {
 			Thread.sleep(getSleepTimeVal());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		view.setTitle(it+"");
-		it++;
-		view.repaint();
+		updateTitle();
+		
 	}
 
 	public static void startEvolution() {
@@ -108,7 +117,6 @@ public class Controller {
 			@Override
 			public void run(){
 				for(int i=0; i<numberOfGenerations; i++){
-					it = 0;
 					world.iterate(numberOfIterationsPerGeneration);
 					world.evolutionPopulation();
 				}
@@ -153,6 +161,10 @@ public class Controller {
 
 	public static void setPopulationSize(int parseInt) {
 		populationSize = parseInt;
+	}
+	
+	public static void setAnimation(boolean b){
+		animation = b;
 	}
 
 
@@ -228,6 +240,11 @@ public class Controller {
 
 	public static Fish getFishIn(Point point) {
 		return world.getFishIn(point);
+	}
+
+
+	public static boolean getAnimation() {
+		return animation;
 	}
 	
 }

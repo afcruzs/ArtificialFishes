@@ -7,6 +7,11 @@ import java.util.Random;
 import fishes.MorphologyGenotype.BendAction.BendType;
 
 public class MorphologyGenotype {
+	@Override
+	public String toString() {
+		return "MorphologyGenotype [bends=" + bends + "]";
+	}
+
 	protected List<BendAction> bends;
 
 	public MorphologyGenotype() {
@@ -37,6 +42,13 @@ public class MorphologyGenotype {
 			this.offset = offset;
 			this.type = type;
 		}
+
+		@Override
+		public String toString() {
+			return "BendAction [offset=" + offset + ", type=" + type + "]";
+		}
+		
+		
 
 	}
 

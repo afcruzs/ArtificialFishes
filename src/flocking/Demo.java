@@ -92,7 +92,7 @@ public class Demo {
 		int N = 500;
 		for (int i = 0; i < N; i++) {
 			//FlockingAgent a1 = FlockingAgent.randomFlockingAgent(mainFrame.getSize());
-			 FlockingAgent a1 = RandomFishGenerator.randomFish();
+			 FlockingAgent a1 = RandomFishGenerator.randomFish(30);
 
 			agents.add(a1);
 		}

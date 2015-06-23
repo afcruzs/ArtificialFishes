@@ -94,21 +94,19 @@ public class RandomFishGenerator {
 		
 		MovementGenotype movementType = randomMovementGenotype();
 		
-		int reproductionAge = RandomUtils.randInt(1, 10);
-		int maximumLevelOfEnergy = RandomUtils.randInt(1, 150);
-		int visionRange = RandomUtils.randInt(1, 7);
+		
+		int width = RandomUtils.randInt(sz/2,sz);
+		int height = RandomUtils.randInt(sz/2,sz);
 		
 		FishGenotype fishGenotype = new FishGenotype(skinGenotype, feedingGenotype,
-				morphologyGenotype, movementType, reproductionAge,
-				maximumLevelOfEnergy, visionRange);
+				morphologyGenotype, movementType,width,height);
 		
 		BufferedImage fishTemplate = null;
 		try {
 			fishTemplate = ImageIO.read(new File("fish0.png"));
 		} catch (IOException e) { e.printStackTrace(); } 
 		
-		int width = RandomUtils.randInt(sz/2,sz);
-		int height = RandomUtils.randInt(sz/2,sz);
+		
 	//	Dimension dim = Controller.getDimension();
 		Dimension dim = new Dimension(500,500);
 		int x = RandomUtils.randInt(10,dim.width);

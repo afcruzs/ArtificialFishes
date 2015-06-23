@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.List;
 import java.util.Random;
 
+import aquarium.RandomUtils;
 import fishes.MorphologyGenotype.BendAction;
 
 public class FishGenotype {
@@ -11,25 +12,25 @@ public class FishGenotype {
 	FeedingGenotype feedingGenotype;
 	MorphologyGenotype morphologyGenotype;
 	MovementGenotype movementGenotype;
+	int width, height;
 
-	int reproductionAge;
-	int maximumLevelOfEnergy;
-	int visionRange;
+	@Override
+	public String toString() {
+		return "FishGenotype [skinGenotype=" + skinGenotype
+				+ ", morphologyGenotype=" + morphologyGenotype + "]";
+	}
 
 	public FishGenotype(SkinGenotype skinGenotype,
 			FeedingGenotype feedingGenotype,
 			MorphologyGenotype morphologyGenotype,
-			MovementGenotype movementGenotype, int reproductionAge,
-			int maximumLevelOfEnergy, int visionRange) {
+			MovementGenotype movementGenotype,
+			int width, int height) {
 
 		super();
 		this.skinGenotype = skinGenotype;
 		this.feedingGenotype = feedingGenotype;
 		this.morphologyGenotype = morphologyGenotype;
 		this.movementGenotype = movementGenotype;
-		this.reproductionAge = reproductionAge;
-		this.maximumLevelOfEnergy = maximumLevelOfEnergy;
-		this.visionRange = visionRange;
 	}
 
 	static FishGenotype[] crossover(FishGenotype gen1, FishGenotype gen2) {
@@ -74,22 +75,17 @@ public class FishGenotype {
 		new MorphologyGenotype((List<BendAction>) code[12]),
 
 		new MovementGenotype((Double) code[13], (Double) code[15],
-				(Double) code[16], (Double) code[14]),
-
-		(Integer) code[0], (Integer) code[1], (Integer) code[2]);
+				(Double) code[16], (Double) code[14]), (Integer)code[1], (Integer)code[2] );
 	}
 
 	static Object[] createRawGeneticCode(FishGenotype geno) {
 		Object[] code = new Object[23];
-
-		code[0] = geno.reproductionAge;
-		code[1] = geno.maximumLevelOfEnergy;
-		code[2] = geno.visionRange;
+		
+		code[1] = geno.width;
+		code[2] = geno.height;
 		code[3] = geno.feedingGenotype.type;
 		code[4] = geno.skinGenotype.ba;
 		code[5] = geno.skinGenotype.bb;
-		// code[6] = geno.skinGenotype.color1;
-		// code[7] = geno.skinGenotype.color2;
 		code[6] = geno.skinGenotype.Da;
 		code[7] = geno.skinGenotype.Db;
 		code[8] = geno.skinGenotype.iterations;
@@ -119,7 +115,7 @@ public class FishGenotype {
 		 * 
 		 * int reproductionAge; int maximumLevelOfEnergy; int visionRange;
 		 */
-		int op = r.nextInt(7);
+		int op = r.nextInt(6);
 		switch (op) {
 		case 0:
 			fishGenotype.skinGenotype.mutate();
@@ -135,23 +131,13 @@ public class FishGenotype {
 		case 3:
 			fishGenotype.movementGenotype.mutate();
 			break;
-
+		case 4:
+			fishGenotype.width += RandomUtils.randDouble(0.0, 1.0)*fishGenotype.width;
+			break;
 		case 5:
-
-			fishGenotype.reproductionAge += r
-					.nextInt(Math.max(fishGenotype.reproductionAge,1)) * r.nextGaussian();
-			break;
-		case 6:
-			fishGenotype.maximumLevelOfEnergy += r
-					.nextInt(Math.max(fishGenotype.maximumLevelOfEnergy,1))
-					* r.nextGaussian();
-			break;
-
-		default:
-			fishGenotype.visionRange += r.nextInt(Math.max(fishGenotype.visionRange,1))
-					* r.nextGaussian();
+			fishGenotype.height += RandomUtils.randDouble(0.0, 1.0)*fishGenotype.height;
 			break;
 		}
 	}
-
+	
 }

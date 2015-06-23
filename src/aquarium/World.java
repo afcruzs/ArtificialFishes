@@ -33,13 +33,20 @@ public class World {
 
 	Vector<FlockingAgent> fishes;
 	List<DrawingTreeEntry> plants;
+	private int iteration;
+	private int generation;
+	public static int MAX_POPULATION = 350;
 
 	public World() {
 		fishes = new Vector<>();
 		plants = new Vector<>();
+		iteration = 0;
+		generation = 0;
 	}
 	
 	void initAgents(int N) {
+		iteration = 0;
+		generation = 0;
 		for (int i = 0; i < N; i++) {
 			 SegregationFlockingAgent a1 = RandomFishGenerator.randomFish(Controller.getFishSize());
 
@@ -48,6 +55,7 @@ public class World {
 	}
 	
 	void singleStep(){
+		iteration++;
 		for(FlockingAgent fish : fishes){
 			fish.act(fishes);
 			torus(fish);
@@ -57,6 +65,7 @@ public class World {
 	}
 	
 	public void iterate(int iterations){
+		iteration = 0;
 		while(iterations-- > 0){
 			singleStep();
 		}
@@ -90,8 +99,8 @@ public class World {
 	 * Draws fishes Ohh not surprising...
 	 */
 	public synchronized void drawFishes(Graphics2D g) {
-		for (FlockingAgent fish : fishes) {
-			fish.draw(g);
+		for(int i=0; i<fishes.size(); i++){
+			fishes.get(i).draw(g);
 		}
 	}
 
@@ -175,21 +184,17 @@ public class World {
 		
 		int initial = fishes.size();
 		
-		int MINIMUM_FISHES = (int) Math.ceil((double)initial/10.0);
+		int MINIMUM_FISHES = (int) Math.ceil((double)initial/5.0);
+		int MAXIMUM_FISHES = (int) Math.ceil((double)MINIMUM_FISHES*1.1);
 		Queue<Fish> q = new LinkedList<>();
-		Random r = new Random();
 		for(FlockingAgent agent : fishes){
 			Fish fish = (Fish)agent;
 			int n = countNeighbors(fish);
-			if( n < MINIMUM_FISHES ){
+			if( n < MINIMUM_FISHES || n > MAXIMUM_FISHES ){
 				double p = (double)n/(double)MINIMUM_FISHES;
 				if( Math.random() > p )
 					q.add(fish);
 			}
-			//Evolve the curren population!
-			//Offspring
-			//Reproduction, mutation
-			//NO FITNESS!, small interactions...
 		}
 		
 		while(!q.isEmpty()) fishes.remove(q.poll());
@@ -202,9 +207,8 @@ public class World {
 		
 		fishes.clear();
 		while(!q.isEmpty()) fishes.add(q.poll());
-		JOptionPane.showMessageDialog(null, fishes.size()-initial);
 		
-		//reaper();
+		generation++;
 	}
 
 	public Fish[] getFishesArray() {
@@ -230,5 +234,17 @@ public class World {
 				return (Fish)fishes.get(i);
 		
 		return null;
+	}
+
+	public int getCurrentIteration() {
+		return iteration;
+	}
+
+	public int getCurrentGeneration() {
+		return generation;
+	}
+
+	public int getPopulationSize() {
+		return fishes.size();
 	}
 }

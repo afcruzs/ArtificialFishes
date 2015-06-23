@@ -93,7 +93,7 @@ public class ActivatorInhibitorSystem {
 		for (int i = 1; i < A.length; i++) {
 			int prev_i = i-1;
 			if( prev_i < 0 ) prev_i = getRows()-1;
-			int post_i = (i+1) % getCols();
+			int post_i = (i+1) % getRows();
 			for (int j = 1; j < A[i].length; j++) {
 				int prev_j = j-1;
 				if( prev_j < 0 ) prev_j = getCols()-1;

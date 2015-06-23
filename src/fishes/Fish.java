@@ -46,9 +46,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	protected int colours[];
 	protected FishGenotype genotype;
 	protected int width, height;
-	protected int energy;
-	protected int age;
-	protected int orientation = 0;
+	
 	private boolean iterated;
 	public Fish(BufferedImage fishTemplate, FishGenotype fishGenotype, int x,
 			int y, int width, int height) {
@@ -68,7 +66,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 
 		SkinGenotype sk = genotype.skinGenotype;
 		system = new ActivatorInhibitorSystem(sk.s, sk.Da, sk.Db, sk.ra, sk.rb,
-				sk.ba, sk.bb, image.getWidth(), image.getHeight(), x, y,
+				sk.ba, sk.bb, width, height, x, y,
 				sk.iterations);
 
 		for (BendAction ba : genotype.morphologyGenotype.bends) {
@@ -78,10 +76,9 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 				horizontalBend(ba.offset);
 		}
 
-		energy = genotype.maximumLevelOfEnergy;
-		age = 0;
 		iterated = false;
 		paintFish();
+	//	system.averageColor = ColorUtils.blend(new Color(colours[0]), new Color(colours[1]));
 	}
 	
 	public void paintFish(){
@@ -168,17 +165,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	}
 	
 	
-	public Rectangle getVisionBoundingBox(){
-		Point coord = getUbication();
-		int range = getVisionRange();
-		coord.x -= range;
-		coord.y -= range;
-		Dimension dim = getSize();
-		dim.setSize(dim.getWidth()+range, dim.getHeight()+range);
-		
-		
-		return new Rectangle(coord, dim);
-	}
+
 	
 	public void act( Vector<FlockingAgent> neighbors ){
 		super.act(neighbors);
@@ -188,6 +175,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	}
 	
 	public void drawInCorner(Graphics g){
+		iterateSystem();
 		g.drawImage(image, 0, 0, null);
 	}
 	
@@ -207,9 +195,6 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 		
 	}
 
-	public int getVisionRange() {
-		return genotype.visionRange;
-	}
 
 	@Override
 	public Rectangle getBoundingBox() {
@@ -285,32 +270,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 
 	}
 
-	void eatPlants(List<DrawingTreeEntry> plants) {
-		if (plants.isEmpty())
-			return;
-		System.out.println("Eating plants...");
-		increaseEnergy(1);
-	}
 
-	void eatFishes(List<Fish> fishes) {
-		if (fishes.isEmpty())
-			return;
-		Random r = new Random();
-		Fish dam = fishes.get(r.nextInt(fishes.size()));
-
-		dam.energy = 0;
-		System.out.println("Eating Fishes...");
-		increaseEnergy(dam.genotype.maximumLevelOfEnergy);
-	}
-
-	private void increaseEnergy(int plus) {
-		energy = Math.min(genotype.maximumLevelOfEnergy, energy + plus);
-	}
-
-
-	public void increaseAge() {
-		age++;
-	}
 
 	public void setWidth(int i) {
 		width = i;
@@ -346,6 +306,10 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	
 	public int getImageHeight(){
 		return image.getHeight();
+	}
+	
+	public String toString(){
+		return genotype.toString();
 	}
 
 }
