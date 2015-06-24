@@ -43,6 +43,7 @@ public abstract class SegregationFlockingAgent extends FlockingAgent {
 		
 		color = ColorUtils.randomColor();
 	}
+
 	
 	FlockingVector alignVector(Vector<FlockingAgent> neighbors) {
 		FlockingVector sum = new FlockingVector(0.0, 0.0);

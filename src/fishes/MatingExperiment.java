@@ -99,6 +99,22 @@ public class MatingExperiment {
 				g2d.setColor(fish1.system.averageColor);
 				g2d.fillRect(110, 340, 50, 50);
 				g2d.drawString(diff+"", 10, 400);
+				
+				int col[] = fish1.colours;
+				int sz = 4;
+				for(int i=0; i<col.length; i++){
+					g.setColor(new Color(col[i]));
+					g.fillRect(sz*i, 420, sz, 10);
+					
+				}
+				
+				col = fish2.colours;
+				
+				for(int i=0; i<col.length; i++){
+					g.setColor(new Color(col[i]));
+					g.fillRect(sz*i, 440, sz, 10);
+					
+				}
 			}
 		});
 		

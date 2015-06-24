@@ -32,7 +32,6 @@ public class FlockingAgent {
 	protected FlockingVector velocity;
 	protected FlockingVector location;
 	protected FlockingVector acceleration;
-	protected double energy;
 	protected double mass;
 
 	// protected Color color;
@@ -64,13 +63,9 @@ public class FlockingAgent {
 		velocity = velocityVector;
 		location = new FlockingVector(position.x, position.y);
 		mass = 1.0;
-		energy = MAX_ENERGY / 2.0;
 		
 	}
 
-	public void sumToEnergy(double delta) {
-		energy += delta;
-	}
 
 	public int countNeighbors(Vector<FlockingAgent> neighbors, double R) {
 		int ctr = 0;

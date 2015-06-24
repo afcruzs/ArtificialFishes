@@ -95,19 +95,22 @@ public class Controller {
 		if(getFinished()) return;
 		while(getPaused());
 		
-		view.repaint();
+		
+		updateTitle();
 		if( !animation ) return;
+		view.repaint();
 		
 		try {
 			Thread.sleep(getSleepTimeVal());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		updateTitle();
+		
 		
 	}
 
 	public static void startEvolution() {
+		
 		if(paused){
 			setPaused(false);
 			return;
@@ -117,6 +120,7 @@ public class Controller {
 			@Override
 			public void run(){
 				for(int i=0; i<numberOfGenerations; i++){
+					System.out.println(world.getPopulationSize());
 					world.iterate(numberOfIterationsPerGeneration);
 					world.evolutionPopulation();
 				}

@@ -78,7 +78,6 @@ public class FlockingLife implements Life<EvovableFlockingPopulation> {
 				int sz = agent.countNeighbors(agents, 50.0);
 				for( Shape sh : eaters ){
 					if( sh.contains(p.x,p.y) && sz > 10 ){
-						agent.sumToEnergy(1.0);
 						break;
 					}
 				}
@@ -98,7 +97,6 @@ public class FlockingLife implements Life<EvovableFlockingPopulation> {
 		double maxm = -600.0;
 		for( FlockingAgent agent : agents ){
 			population.addIndividual((EvovableFlockingIndividual) agent);
-			maxm = Math.max(maxm,agent.energy);
 		}
 		
 	//	System.out.println("The max: " + maxm);

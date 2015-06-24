@@ -6,35 +6,24 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.Random;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.print.attribute.standard.MediaSize.Other;
 
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
-
-import plants.DrawingTreeEntry;
 import DRSystem.ActivatorInhibitorSystem;
 import affineTransforms.NonLinearTransform;
 import aquarium.ColorUtils;
-import aquarium.Controller;
 import aquarium.ObservableEntity;
 import aquarium.RandomUtils;
-
 import fishes.FeedingGenotype.Type;
 import fishes.MorphologyGenotype.BendAction;
 import fishes.MorphologyGenotype.BendAction.BendType;
-import fishes.MovementGenotype.ProbableMovement;
 import flocking.FlockingAgent;
 import flocking.FlockingVector;
 import flocking.SegregationFlockingAgent;
@@ -46,8 +35,9 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	protected int colours[];
 	protected FishGenotype genotype;
 	protected int width, height;
-	
 	private boolean iterated;
+	private boolean predator;
+	private int energy;
 	public Fish(BufferedImage fishTemplate, FishGenotype fishGenotype, int x,
 			int y, int width, int height) {
 		super(new Point(x,y), new FlockingVector(RandomUtils.randInt(-300, 300), RandomUtils.randInt(-300, 300)) );
@@ -57,12 +47,20 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 		this.genotype = fishGenotype;
 		this.width = width;
 		this.height = height;
+		
 		colours = new int[256];
 		colours[0] = genotype.skinGenotype.color1.getRGB();
 		colours[1] = genotype.skinGenotype.color2.getRGB();
 
 		for (int i = 2; i < colours.length; i++)
-			colours[i] = new Color(colours[i - 1] | colours[i - 2]).getRGB();
+			colours[i] = i % 5 == (i - 1) % 3 ? colours[0]
+					: i % 7 == 1 ? colours[1] : i % 17 == 7 ? ColorUtils
+							.blend(new Color(colours[i - 1]),
+									new Color(colours[i - 2])).brighter()
+							.getRGB() : ColorUtils
+							.blend(new Color(colours[i - 1]),
+									new Color(colours[i - 2])).darker()
+							.getRGB();
 
 		SkinGenotype sk = genotype.skinGenotype;
 		system = new ActivatorInhibitorSystem(sk.s, sk.Da, sk.Db, sk.ra, sk.rb,
@@ -77,7 +75,12 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 		}
 
 		iterated = false;
+		predator = Math.random() <= 0.08;
+	//	iterateSystem();
+		system.step();
 		paintFish();
+		
+		energy = 10;
 	//	system.averageColor = ColorUtils.blend(new Color(colours[0]), new Color(colours[1]));
 	}
 	
@@ -177,6 +180,7 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	public void drawInCorner(Graphics g){
 		iterateSystem();
 		g.drawImage(image, 0, 0, null);
+		g.drawString(energy+"", 10, 10);
 	}
 	
 	@Override
@@ -185,14 +189,12 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	}
 
 	public void draw(Graphics2D g) {
-		// system.step();
-		
-//		Rectangle bbox = getVisionBoundingBox();
-//		g.draw(bbox);
-		
-	    
 		system.draw(g, image, colours, width, height);
-		
+		if( predator ){
+			g.setColor(Color.RED);
+			g.drawRect(system.getX(), system.getY(), 30, 30);
+			
+		}
 	}
 
 
@@ -290,6 +292,9 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 
 	@Override
 	public boolean segregationFunction(SegregationFlockingAgent agent) {
+		boolean other = ((Fish)agent).isPredator();
+		if( isPredator() && !other ) return false;
+		if( !isPredator() && other ) return true;
 		return colorDifference(this, (Fish)agent) >= 0.4;
 	}
 
@@ -310,6 +315,14 @@ public class Fish extends SegregationFlockingAgent implements ObservableEntity {
 	
 	public String toString(){
 		return genotype.toString();
+	}
+
+	public boolean isPredator() {
+		return predator;
+	}
+
+	public int getEnergy() {
+		return energy;
 	}
 
 }

@@ -39,6 +39,23 @@ public class ColorUtils {
 		return (pixel>>24) == 0x00;
 	}
     
+    public static int[] gradient(Color color1, Color color2, int n){
+    	int[] c = new int[n];
+    	int r = (int) ((double)(color2.getRed()-color1.getRed())/(double)n);
+		int g = (int) ((double)(color2.getGreen()-color1.getGreen())/(double)n);
+		int b = (int) ((double)(color2.getBlue()-color1.getBlue())/(double)n);
+		Color tmp = new Color(color1.getRed(),color1.getGreen(),color1.getBlue());
+		for(int i=0; i<n; i++){
+			c[i] = tmp.getRGB();
+			Color xd = new Color( (tmp.getRed()+r)%256,(tmp.getGreen()+g)%256,(tmp.getBlue()+b)%256);
+			tmp = xd;
+			
+		}
+        
+        return c;
+    }
+    
+   
     
     
     public static Color randomColor(){

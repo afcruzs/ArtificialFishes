@@ -111,12 +111,7 @@ public class ActivatorInhibitorSystem {
 
 				double bjth = B[i][j] + s*A[i][j]*A[i][j] - rb*B[i][j] +
 							Db*(B[i][prev_j] + B[i][post_j] - 2*A[i][j]) + bb;
-				
-//				A[i][j] = A[i][j] + k*(aith+ajth);
-//				B[i][j] = B[i][j] + k*(bith+bjth);
-//				
-//				if( A[i][j] <= 0.0 ) A[i][j] = 0.01; //HUEHUEHUEHE
-//				if( B[i][j] <= 0.0 ) B[i][j] = 0.01;
+
 				
 				changesA.add( new double[]{ i, j, A[i][j] + k*(aith+ajth) } );
 				changesB.add( new double[]{ i, j, B[i][j] + k*(bith+bjth) } );
@@ -159,7 +154,7 @@ public class ActivatorInhibitorSystem {
 	
 	public int scale( int maxScale, double minRange, double maxRange, double value ){
 		int t = (int) ((value - minRange) * ((double)maxScale) / (maxRange-minRange));
-		t = Math.max( 0, Math.min( 255, t ) );
+		t = Math.max( 0, Math.min( maxScale, t ) );
 		return t;
 	}
 	
@@ -191,8 +186,8 @@ public class ActivatorInhibitorSystem {
 		for (int i = 0; i < getRows(); i++) {
 			for (int j = 0; j < getCols(); j++) {
 				if( !isTransparent(image.getRGB(i, j)) && image.getRGB(i, j) != Color.BLACK.getRGB() ){
-					image.setRGB( i, j, colours[ scale(255,minRange,maxRange,A[i][j]) ] );
-					Color t = new Color(colours[ scale(255,minRange,maxRange,A[i][j]) ]);
+					image.setRGB( i, j, colours[ scale(colours.length-1,minRange,maxRange,A[i][j]) ] );
+					Color t = new Color(colours[ scale(colours.length-1,minRange,maxRange,A[i][j]) ]);
 					if( c == null ) c = t;
 					else c = ColorUtils.blend(c, t);
 				}

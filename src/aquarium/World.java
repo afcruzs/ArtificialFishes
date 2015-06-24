@@ -54,12 +54,35 @@ public class World {
 		}
 	}
 	
+	void reaper(){
+		Queue<FlockingAgent> eaten = new LinkedList<>();
+		for(FlockingAgent agent : fishes){
+			if( ((Fish)agent).getEnergy() <= 0 )
+				eaten.add(agent);
+		}
+
+		while( !eaten.isEmpty() ) fishes.remove(eaten.poll());
+	}
+	
 	void singleStep(){
 		iteration++;
 		for(FlockingAgent fish : fishes){
 			fish.act(fishes);
 			torus(fish);
 		}
+		
+		
+		
+		for(FlockingAgent agent : fishes){
+			Fish fish = (Fish)agent;
+			if(!fish.isPredator()) continue;
+			
+			for(FlockingAgent ag : fishes )
+				if( ag.distance(fish) <= 15.0  && !((Fish)ag).isPredator()  )
+					((Fish)ag).decreaseEnergy();
+		}
+		
+		reaper();
 		
 		Controller.callBackOnIteration();
 	}
@@ -182,6 +205,8 @@ public class World {
 	
 	public void evolutionPopulation(){
 		
+		reaper();
+		
 		int initial = fishes.size();
 		
 		int MINIMUM_FISHES = (int) Math.ceil((double)initial/5.0);
@@ -190,7 +215,7 @@ public class World {
 		for(FlockingAgent agent : fishes){
 			Fish fish = (Fish)agent;
 			int n = countNeighbors(fish);
-			if( n < MINIMUM_FISHES || n > MAXIMUM_FISHES ){
+			if( n < MINIMUM_FISHES  ){
 				double p = (double)n/(double)MINIMUM_FISHES;
 				if( Math.random() > p )
 					q.add(fish);

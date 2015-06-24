@@ -109,8 +109,8 @@ public class NonLinearTransform{
 	}
 	
 	public static void main(String[] args) throws IOException{
-		BufferedImage img = ImageIO.read(new File("square.png"));
-		img = NonLinearTransform.bendVertical(img, 100);
+		BufferedImage img = ImageIO.read(new File("fish0.png"));
+		//img = NonLinearTransform.bendVertical(img, 100);
 		img = NonLinearTransform.bendHorizontal(img, 150);
 		
 		go(img);

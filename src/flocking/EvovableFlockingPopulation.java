@@ -73,7 +73,7 @@ public class EvovableFlockingPopulation implements Population {
 
 		@Override
 		public double fitness() {
-			return energy;
+			return 1.0;
 		}
 		
 		double[] rawCode(){
@@ -95,11 +95,9 @@ public class EvovableFlockingPopulation implements Population {
 			EvovableFlockingIndividual child = new EvovableFlockingIndividual(
 					new Point((int)location.getX(),(int)location.getY()), velocity);;
 			if( new Random().nextBoolean() ){
-				child.energy = 5.0;
 				child.NEIGHBOR_RAIDUS = code[0];
 				child.SEPARATION_RAIDUS = code[1];
 			}else{
-				child.energy = 5.0;
 				child.NEIGHBOR_RAIDUS = partnerCode[0];
 				child.SEPARATION_RAIDUS = partnerCode[1];
 			}
