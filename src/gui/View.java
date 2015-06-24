@@ -2,27 +2,40 @@ package gui;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-import javax.swing.JButton;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import fishes.Fish;
 import aquarium.Controller;
+import fishes.Fish;
 
 @SuppressWarnings("serial")
 public class View extends JFrame {
 	
 	private ViewBar menuBar;
+	static BufferedImage bg ;
+	static{
+		try {
+			bg = ImageIO.read(new File("bg.jpg"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	class AquariumPanel extends JPanel{
 		public AquariumPanel() {
+			setBackground(new Color(28,107,160));
 			addMouseListener(new MouseListener() {
 				
 				@Override
@@ -66,6 +79,12 @@ public class View extends JFrame {
 		@Override
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
+			Dimension dim = Controller.getDimension();
+			int width = (int) dim.getWidth();
+			int height = (int) dim.getHeight();
+			
+			
+			g.drawImage(bg,0,0,width,height,0,0,(int)bg.getWidth(),(int)bg.getHeight(),null);
 			Controller.draw((Graphics2D)g);
 		}
 	}
